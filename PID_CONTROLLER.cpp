@@ -362,7 +362,7 @@ End
 */
 void main(void)
 {
-	//void(*foo)(void);
+	void(*foo)(void);
 	//configure hardware
 	Config_Watchdog(16);
 	Watchdog(STOP);
@@ -380,8 +380,8 @@ void main(void)
 	On_interrupt("Timer01", &Timer_01);
 	On_interrupt("Int0", &Int_0);
 	On_interrupt("Int0", &Int_1);
-	//foo = &Int_1;
-	//(*foo)();
+	foo = &Int_1;
+	(*foo)();
 	
 }
 
