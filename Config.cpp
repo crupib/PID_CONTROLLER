@@ -1,5 +1,5 @@
 #include "stdafx.h"
-
+#include "Main.h"
 void Config_Watchdog(int ms) // Times vary according to chip used.
 {
 	printf("Config Watchdog To be implented in hardware\n");
@@ -43,6 +43,35 @@ void Int_0(void)
 void Int_1(void)
 {
 	printf("Int_1\n");
+}
+void Init_parameter(BYTE mtr)
+{
+	Pid_time = 4;
+	Sum1 = 1000;
+
+	Vmax_pos[mtr] = 126;
+	Vmax_neg[mtr] = -Vmax_pos[mtr];
+
+	Vel_pos[mtr] = 126; //      'Velocity Initialize
+	Vel_last[mtr] = Vel_pos[mtr]; //      'last velocity value
+	Vel_neg[mtr] = -Vel_pos[mtr]; //      'Initialize negative velocity
+
+	mybits.Flag_velocity = False;
+	mybits.Start_move = True; //       'start move
+
+	Max_pwm[mtr] = 250;//       'Max pwm value
+	Deg[mtr] = 45; //'acceleration slope in grad(1)i
+	Factor_acc[mtr] = 100;
+	Point_p1[mtr] = 20000; //      'Point 1
+	Motor_setpoint[mtr] = 0; //      'Initialize position = 0
+
+	//   if (Mtr == 1) 
+	//		M1_pwm = 0; //       'pwm x = 0
+	//   if (Mtr == 2) 
+	//		M2_pwm = 0; //       'pwm y = 0
+
+	Mode_ctrl = Mode_trp;  //      'trapezoidal control
+
 }
 
 

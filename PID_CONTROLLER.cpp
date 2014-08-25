@@ -137,6 +137,7 @@
 //$08  ACSR  ACD - ACO ACI ACIE ACIC ACIS1 ACIS0
 //$00  Reserved
 #include "stdafx.h"
+#include "Main.h"
 //-------------------------------------------------------------------------------------
 //Registers to be filled in per board
 #define PORTA  0x00  
@@ -382,6 +383,8 @@ void main(void)
 	On_interrupt("Int0", &Int_1);
 	foo = &Int_1;
 	(*foo)();
+	Init_parameter(1);
+	Init_parameter(2);
 	
 }
 

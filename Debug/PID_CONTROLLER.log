@@ -1,26 +1,77 @@
-﻿Build started 8/25/2014 12:44:15 PM.
-     1>Project "C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\PID_CONTROLLER\PID_CONTROLLER.vcxproj" on node 2 (Rebuild target(s)).
-     1>_PrepareForClean:
-         Deleting file "Debug\PID_CONTROLLER.tlog\PID_CONTROLLER.lastbuildstate".
-       InitializeBuildStatus:
+﻿Build started 8/25/2014 2:32:37 PM.
+     1>Project "C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\PID_CONTROLLER\PID_CONTROLLER.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
          Creating "Debug\PID_CONTROLLER.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\PID_CONTROLLER.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
-         stdafx.cpp
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\PID_CONTROLLER.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Config.cpp PID_CONTROLLER.cpp
+         All outputs are up-to-date.
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\PID_CONTROLLER.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt PID_CONTROLLER.cpp
          PID_CONTROLLER.cpp
-         Config.cpp
-         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\Debug\PID_CONTROLLER.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\Debug\PID_CONTROLLER.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\Debug\PID_CONTROLLER.lib" /MACHINE:X86 Debug\Config.obj
          Debug\PID_CONTROLLER.obj
          Debug\stdafx.obj
-         PID_CONTROLLER.vcxproj -> C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\Debug\PID_CONTROLLER.exe
-       FinalizeBuildStatus:
-         Deleting file "Debug\PID_CONTROLLER.tlog\unsuccessfulbuild".
-         Touching "Debug\PID_CONTROLLER.tlog\PID_CONTROLLER.lastbuildstate".
-     1>Done Building Project "C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\PID_CONTROLLER\PID_CONTROLLER.vcxproj" (Rebuild target(s)).
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_kp" (?Pid_kp@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_ki" (?Pid_ki@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_kd" (?Pid_kd@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_scale" (?Pid_scale@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_prev_error" (?Pid_prev_error@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_integral_error" (?Pid_integral_error@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_error" (?Pid_error@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Ptemp" (?Ptemp@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Motor_setpoint" (?Motor_setpoint@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pid_out" (?Pid_out@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Timer_pid" (?Timer_pid@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pos_encoder" (?Pos_encoder@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Old_encoder" (?Old_encoder@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * New_speed" (?New_speed@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Act_speed" (?Act_speed@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Acc_speed" (?Acc_speed@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Pos_final" (?Pos_final@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned short Temp_enc" (?Temp_enc@@3GA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "char * Ucommand" (?Ucommand@@3PADA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "char * Ucommand_old" (?Ucommand_old@@3PADA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "char * Char" (?Char@@3PADA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Idt" (?Idt@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char N_cmd" (?N_cmd@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "char * Cmd_ar" (?Cmd_ar@@3PADA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Mode_ctrl" (?Mode_ctrl@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long Mtrnum_kp" (?Mtrnum_kp@@3JA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long Mtrnum_ki" (?Mtrnum_ki@@3JA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long Mtrnum_kd" (?Mtrnum_kd@@3JA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Vel_pos" (?Vel_pos@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Vel_neg" (?Vel_neg@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Vel_last" (?Vel_last@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char * Rpwm" (?Rpwm@@3PAEA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Factor_acc" (?Factor_acc@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Point_p1" (?Point_p1@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char * Dir_diff" (?Dir_diff@@3PAEA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Diff_position" (?Diff_position@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Trapez_1" (?Trapez_1@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Trapez_2" (?Trapez_2@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * New_encoder" (?New_encoder@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "float * Deg" (?Deg@@3PAMA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "float * Rad" (?Rad@@3PAMA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "float * Vel_max" (?Vel_max@@3PAMA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Diff_2" (?Diff_2@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char * Max_pwm" (?Max_pwm@@3PAEA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Pwm_temp" (?Pwm_temp@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Dir_temp" (?Dir_temp@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Mtr_num" (?Mtr_num@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Mtr" (?Mtr@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "struct misc_bits mybits" (?mybits@@3Umisc_bits@@A) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "char * Str_tx_1" (?Str_tx_1@@3PADA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long Sum1" (?Sum1@@3JA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Vmax_pos" (?Vmax_pos@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Vmax_neg" (?Vmax_neg@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Factor_ang" (?Factor_ang@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Difference" (?Difference@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Acc_speed_p" (?Acc_speed_p@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "long * Acc_speed_n" (?Acc_speed_n@@3PAJA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char Pid_time" (?Pid_time@@3EA) already defined in Config.obj
+     1>PID_CONTROLLER.obj : error LNK2005: "unsigned char * Mstop_ctr" (?Mstop_ctr@@3PAEA) already defined in Config.obj
+     1>C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\Debug\PID_CONTROLLER.exe : fatal error LNK1169: one or more multiply defined symbols found
+     1>Done Building Project "C:\Users\crupib\documents\visual studio 2013\Projects\PID_CONTROLLER\PID_CONTROLLER\PID_CONTROLLER.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:10.45
+Time Elapsed 00:00:00.99
