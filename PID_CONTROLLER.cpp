@@ -215,8 +215,10 @@ These will run in main routine see below
 Config Int0 = Falling
 Config Int1 = Falling
 //
+These will run in main routine see below
 Config Timer1 = Pwm, Pwm = 8, Compare A Pwm = Clear Down, Compare B Pwm = Clear Down, Prescale = 1       '39.0622Khz pwm
 Config Timer0 = Timer, Prescale = 64       '20000000 clk / 64 presc = 312.5 Khz Timer Clock
+These will run in main routine see below
 On Timer0 Timer_0   ' Update PID    '312.5 Khz / 256 (8bit counter overflow) = 1.2207 Khz interrupt
 On Int0 Int_0       '  Int for limit switch 1 @ Port D.2
 On Int1 Int_1       '  Int for limit switch 2 @ Port D.3
@@ -360,6 +362,7 @@ End
 */
 void main(void)
 {
+	//void(*foo)(void);
 	//configure hardware
 	Config_Watchdog(16);
 	Watchdog(STOP);
@@ -367,7 +370,21 @@ void main(void)
 	//Config Int1 = Falling
 	Config_intx(FALLING,0);
 	Config_intx(FALLING,1);
+	Config_timer1(PWM, NONE,
+		0, 0, CLEAR_DOWN,
+		NOTUSED, 
+		8, CLEAR_DOWN,
+		CLEAR_DOWN,
+		"Timer1", 1);
+	Config_timer0(TIMER, NONE,  0, "Timer0", 64);
+	On_interrupt("Timer01", &Timer_01);
+	On_interrupt("Int0", &Int_0);
+	On_interrupt("Int0", &Int_1);
+	//foo = &Int_1;
+	//(*foo)();
+	
 }
+
 /*
 Int_0:              'Limit Switch Motor 1
 					Call Configure_pid(1, 0, 0, 0)
