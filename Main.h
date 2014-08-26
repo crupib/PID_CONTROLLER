@@ -56,13 +56,7 @@ BYTE Pwm_temp;
 BYTE Dir_temp;
 BYTE Mtr_num;
 BYTE Mtr;
-struct misc_bits
-{
-	unsigned  Start_move : 1;
-	unsigned Tx_enable : 1;
-	unsigned Flag_velocity : 1;
-	unsigned Temp_bit : 1;
-}mybits;
+
 
 char Str_tx_1[20];   //       'print in Main do-loop if Tx-enable = 1
 long Sum1;
@@ -74,3 +68,9 @@ long Acc_speed_p[2];
 long Acc_speed_n[2];
 BYTE Pid_time;
 BYTE Mstop_ctr[2];
+short COMPAREA;
+short COMPAREB;
+short Pwm1a;
+short Pwm1b;
+short M1_pwm;
+short M2_pwm;

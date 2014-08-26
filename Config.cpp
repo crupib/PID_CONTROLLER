@@ -1,5 +1,25 @@
 #include "stdafx.h"
-#include "Main.h"
+
+extern long Vel_pos[2];
+extern BYTE Pid_time;
+extern long Sum1;
+extern long Vmax_pos[2];
+extern long Vmax_neg[2];
+
+extern long Vel_neg[2];
+extern long Vel_last[2];
+extern BYTE Max_pwm[2];
+extern long Factor_acc[2];
+extern float Deg[2];
+extern long Point_p1[2];
+extern BYTE Mtr_num;
+extern BYTE Mtr;
+extern short M1_pwm;
+extern short M2_pwm;
+extern BYTE Mode_ctrl;
+extern long Motor_setpoint[2];
+#define Mode_trp 2
+
 void Config_Watchdog(int ms) // Times vary according to chip used.
 {
 	printf("Config Watchdog To be implented in hardware\n");
@@ -44,11 +64,18 @@ void Int_1(void)
 {
 	printf("Int_1\n");
 }
+struct misc_bits
+{
+	unsigned  Start_move : 1;
+	unsigned Tx_enable : 1;
+	unsigned Flag_velocity : 1;
+	unsigned Temp_bit : 1;
+};
 void Init_parameter(BYTE mtr)
 {
 	Pid_time = 4;
 	Sum1 = 1000;
-
+	misc_bits mybits;
 	Vmax_pos[mtr] = 126;
 	Vmax_neg[mtr] = -Vmax_pos[mtr];
 
@@ -56,8 +83,8 @@ void Init_parameter(BYTE mtr)
 	Vel_last[mtr] = Vel_pos[mtr]; //      'last velocity value
 	Vel_neg[mtr] = -Vel_pos[mtr]; //      'Initialize negative velocity
 
-	mybits.Flag_velocity = False;
-	mybits.Start_move = True; //       'start move
+	mybits.Flag_velocity = false;
+	mybits.Start_move = true; //       'start move
 
 	Max_pwm[mtr] = 250;//       'Max pwm value
 	Deg[mtr] = 45; //'acceleration slope in grad(1)i
@@ -65,10 +92,11 @@ void Init_parameter(BYTE mtr)
 	Point_p1[mtr] = 20000; //      'Point 1
 	Motor_setpoint[mtr] = 0; //      'Initialize position = 0
 
-	//   if (Mtr == 1) 
-	//		M1_pwm = 0; //       'pwm x = 0
-	//   if (Mtr == 2) 
-	//		M2_pwm = 0; //       'pwm y = 0
+
+	if (Mtr == 1)
+		M1_pwm = 0; //       'pwm x = 0
+	if (Mtr == 2)
+		M2_pwm = 0; //       'pwm y = 0
 
 	Mode_ctrl = Mode_trp;  //      'trapezoidal control
 

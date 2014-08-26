@@ -158,7 +158,6 @@
 #define UBRR   0x0f
 
 
-
 static const char regfile[] = "m128def.dat"; //      ' specify the used micro
 
 int  crystal = 20000000; //' used crystal frequency - Obsolete
@@ -334,10 +333,14 @@ Call Configure_pid(1, 500, 100, 500)       ''configure Motor 1 - pid initialize
 Call Configure_pid(2, 500, 100, 500)       'configure Motor 2 - pid initialize
 '...................P....I......D
 Print "(0 Motor Control, 0)"
+*/
+
+
 //'-------------------------------------------------------------------------------
 //'---------------------- MAIN PROGRAM -------------------------------------------
 //'-------------------------------------------------------------------------------
 //Main:
+/*
 Test1_led = True
 
 Motor_led = True
@@ -361,8 +364,14 @@ End
 '-------------------------------------------------------------------------------
 
 */
+
 void main(void)
 {
+	
+	M1_pwm = 0;
+	M2_pwm = 0;
+
+	
 	void(*foo)(void);
 	//configure hardware
 	Config_Watchdog(16);

@@ -97,6 +97,7 @@ register Pwm1b;
 register M1_pwm;
 register M2_pwm;
 
+
 char regfile[20] = "m128def.dat";
 int crystal = 20000000;
 int $baud = 19200;       //' use baud rate
@@ -990,10 +991,10 @@ void Init_parameter(BYTE mtr )
     Point_p1[mtr] = 20000; //      'Point 1
     Motor_setpoint[mtr] = 0; //      'Initialize position = 0
  
- //   if (Mtr == 1) 
- //		M1_pwm = 0; //       'pwm x = 0
- //   if (Mtr == 2) 
- //		M2_pwm = 0; //       'pwm y = 0
+      if (Mtr == 1) 
+ 		M1_pwm = 0; //       'pwm x = 0
+      if (Mtr == 2) 
+    	M2_pwm = 0; //       'pwm y = 0
  
     Mode_ctrl = Mode_trp ;  //      'trapezoidal control
  
