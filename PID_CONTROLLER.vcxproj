@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Original.h" />
     <ClInclude Include="PID_CONTROLLER.H" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
