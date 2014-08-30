@@ -18,6 +18,7 @@ extern short M1_pwm;
 extern short M2_pwm;
 extern BYTE Mode_ctrl;
 extern long Motor_setpoint[2];
+extern void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
 #define Mode_trp 2
 
 void Config_Watchdog(int ms) // Times vary according to chip used.
@@ -52,6 +53,10 @@ void On_interrupt(char * Name, void * routine)
 {
 	printf("Turn on interrupt %s %x\n", Name, routine);
 }
+void Enable_interrupt(char * Name)
+{
+	printf("interrupt enabled for  %s\n", Name);
+}
 void Timer_01(void)
 {
 	printf("Timer_01\n");
@@ -59,11 +64,22 @@ void Timer_01(void)
 void Int_0(void)
 {
 	printf("Int_0\n");
+	Configure_pid(1, 0, 0, 0);
+	printf("1 FCM, 1\n");
+	
+	
 }
 void Int_1(void)
 {
 	printf("Int_1\n");
+	Configure_pid(1, 0, 0, 0);
+	printf("2 FCM, 1\n");
+	
 }
+void Enable_all_interrupts(void)
+{
+	printf("All interrupts enable\n");
+};
 struct misc_bits
 {
 	unsigned  Start_move : 1;
@@ -99,7 +115,6 @@ void Init_parameter(BYTE mtr)
 		M2_pwm = 0; //       'pwm y = 0
 
 	Mode_ctrl = Mode_trp;  //      'trapezoidal control
-
 }
 
 

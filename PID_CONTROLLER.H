@@ -42,3 +42,5 @@ void On_interrupt(char * Name, void * routine);
 void Timer_01(void);
 void Int_0(void);
 void Int_1(void);
+void Enable_interrupt(char * Name);
+void Enable_all_interrupts(void);

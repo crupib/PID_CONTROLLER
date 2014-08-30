@@ -34,7 +34,7 @@ int  framesize = 64;     //'40     ' default use 40 for the frame space
 
 void Hctl_2032(byte Mtrnum);
 void Exe_pid(byte Mtrnum, long Pid_setpoint, long Pid_actual);
-void Configure_pid(byte M, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
+void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
 void Init_parameter(byte M);
 void Calc_trapez(byte M);
 void Print_com(byte Mt, char * Stringa, long Value);
@@ -82,6 +82,13 @@ void main(void)
 	On_interrupt("Timer01", &Timer_01);
 	On_interrupt("Int0", &Int_0);
 	On_interrupt("Int0", &Int_1);
+	Enable_interrupt("Urxc");
+	Enable_interrupt("Timer0");
+	Enable_interrupt("Int0");
+	Enable_interrupt("Int1");
+	Enable_all_interrupts();
+	foo = &Int_0;
+	(*foo)();
 	foo = &Int_1;
 	(*foo)();
 	Init_parameter(1);
@@ -105,4 +112,11 @@ void main(void)
 		Test1_led.Test1_led = False;
 
 	}
+}
+void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd)
+{
+	Pid_kp[mtr] = Mtrnum_kp;
+	Pid_ki[mtr] = Mtrnum_ki;
+	Pid_kd[mtr] = Mtrnum_kd;
+	Pid_scale[mtr] = 100;
 }
