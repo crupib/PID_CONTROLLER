@@ -18,8 +18,7 @@
 #define PIND   0x0b
 #define UDR    0x0c
 #define USR    0x0d
-#define UCR    0x0e
-#define UBRR   0x0f
+byte ports[40];
 
 static const char regfile[] = "m128def.dat"; //      ' specify the used micro
 
@@ -58,10 +57,12 @@ struct
 void main(void)
 {
 	
-	byte * F = (byte *)PORTF;
-	byte * C = (byte *)PORTC;
-	Test1_led.Test1_led = *F & 11111110;
-	Motor_led.Motor_led = *C & 11111110;
+//	byte * F = (byte *)PORTF;
+	byte  F = ports[PORTF];
+//	byte * C = (byte *)PORTC;
+	byte C = ports[PORTC];
+	Test1_led.Test1_led = F & 11111110;
+	Motor_led.Motor_led = C & 11111110;
 
 	M1_pwm = 0;
 	M2_pwm = 0;
@@ -89,6 +90,8 @@ void main(void)
 	Test1_led.Test1_led = True;
 
 	Motor_led.Motor_led = True;
+	Tx_enable.Tx_enable = 1;
+
 
 	while (true)
 	{
