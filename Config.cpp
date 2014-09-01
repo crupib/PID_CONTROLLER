@@ -1,5 +1,7 @@
 #include "stdafx.h"
+#include <string.h>
 
+extern char ucommand[30];
 extern long Vel_pos[2];
 extern BYTE Pid_time;
 extern long Sum1;
@@ -116,12 +118,10 @@ void Init_parameter(BYTE mtr)
 
 	Mode_ctrl = Mode_trp;  //      'trapezoidal control
 }
-char * Serial_input(void)
-{
-	char ucommand[30];
-	char * pucommand;
-	pucommand = ucommand;
-	return pucommand;
+
+void Serial_input(void)
+{	
+	strcpy(ucommand,"rstf 0 1 5");	
 }
 
 

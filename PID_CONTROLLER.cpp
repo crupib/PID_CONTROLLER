@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
 #include "Main.h"
+#include <string.h>
 //-------------------------------------------------------------------------------------
 //Registers to be filled in per board
 #define PORTA  0x00  
@@ -18,8 +19,7 @@
 #define PIND   0x0b
 #define UDR    0x0c
 #define USR    0x0d
-byte ports[40];
-
+byte ports[40] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,3 };
 static const char regfile[] = "m128def.dat"; //      ' specify the used micro
 
 int  crystal = 20000000; //' used crystal frequency - Obsolete
@@ -61,8 +61,8 @@ void main(void)
 	byte  F = ports[PORTF];
 //	byte * C = (byte *)PORTC;
 	byte C = ports[PORTC];
-	Test1_led.Test1_led = F & 11111110;
-	Motor_led.Motor_led = C & 11111110;
+	Test1_led.Test1_led = F & 00000001;
+	Motor_led.Motor_led = C & 00000001;
 
 	M1_pwm = 0;
 	M2_pwm = 0;
@@ -97,7 +97,7 @@ void main(void)
 	Configure_pid(1, 500, 100, 500);
 	Configure_pid(2, 500, 100, 500);
 	printf("0 Motor Control, 0\n");
-
+	Rs232();
 	Test1_led.Test1_led = True;
 	Motor_led.Motor_led = True;
 
@@ -123,10 +123,26 @@ void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd)
 	Pid_kd[mtr] = Mtrnum_kd;
 	Pid_scale[mtr] = 100;
 }
+
 void Rs232(void)
-{
-	char ucommand[30];
-	char * pucommand;
-	pucommand = ucommand;
-	pucommand = Serial_input();
+{	
+	int i, count;
+	char *p;
+	char *array[5]; 
+	
+	count = i = 0;
+	Serial_input();
+	printf("ucommand = %s\n", ucommand);
+	strupr(ucommand);
+	printf("ucommand = %s\n", ucommand);	
+	p = strtok(ucommand, " ");
+	while (p != NULL)
+	{
+		array[i++] = p;
+		p = strtok(NULL, " ");
+		count++;
+	}
+
+	for (i = 0; i<count; ++i)
+		printf("%s\n", array[i]);
 }

@@ -4,6 +4,8 @@
 #include <tchar.h>
 #include <string>
 #include <math.h>
+
+char ucommand[30];
 #define True 1
 //Const True = 1
 #define False 0
