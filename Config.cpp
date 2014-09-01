@@ -116,5 +116,12 @@ void Init_parameter(BYTE mtr)
 
 	Mode_ctrl = Mode_trp;  //      'trapezoidal control
 }
+char * Serial_input(void)
+{
+	char ucommand[30];
+	char * pucommand;
+	pucommand = ucommand;
+	return pucommand;
+}
 
 

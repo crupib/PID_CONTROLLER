@@ -74,3 +74,4 @@ short Pwm1a;
 short Pwm1b;
 short M1_pwm;
 short M2_pwm;
+void Rs232(void);

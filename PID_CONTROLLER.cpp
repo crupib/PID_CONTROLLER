@@ -82,6 +82,7 @@ void main(void)
 	On_interrupt("Timer01", &Timer_01);
 	On_interrupt("Int0", &Int_0);
 	On_interrupt("Int0", &Int_1);
+	On_interrupt("Urxc", &Rs232);
 	Enable_interrupt("Urxc");
 	Enable_interrupt("Timer0");
 	Enable_interrupt("Int0");
@@ -93,11 +94,14 @@ void main(void)
 	(*foo)();
 	Init_parameter(1);
 	Init_parameter(2);
+	Configure_pid(1, 500, 100, 500);
+	Configure_pid(2, 500, 100, 500);
+	printf("0 Motor Control, 0\n");
 
 	Test1_led.Test1_led = True;
-
 	Motor_led.Motor_led = True;
-	Tx_enable.Tx_enable = 1;
+
+	//Tx_enable.Tx_enable = 1;//Test code
 
 
 	while (true)
@@ -110,7 +114,6 @@ void main(void)
 			printf("%s\n", Str_tx_1);
 		}
 		Test1_led.Test1_led = False;
-
 	}
 }
 void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd)
@@ -119,4 +122,11 @@ void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd)
 	Pid_ki[mtr] = Mtrnum_ki;
 	Pid_kd[mtr] = Mtrnum_kd;
 	Pid_scale[mtr] = 100;
+}
+void Rs232(void)
+{
+	char ucommand[30];
+	char * pucommand;
+	pucommand = ucommand;
+	pucommand = Serial_input();
 }

@@ -44,3 +44,4 @@ void Int_0(void);
 void Int_1(void);
 void Enable_interrupt(char * Name);
 void Enable_all_interrupts(void);
+char * Serial_input(void);
