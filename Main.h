@@ -6,6 +6,8 @@
 #include <math.h>
 
 char ucommand[30];
+
+char ucommand_old[30];
 #define True 1
 //Const True = 1
 #define False 0
@@ -77,3 +79,45 @@ short Pwm1b;
 short M1_pwm;
 short M2_pwm;
 void Rs232(void);
+
+enum command {
+	RSTF,
+	MADE,
+	VER,
+	SKP,
+	SKI,
+	SKD,
+	GO,
+	VMAX,
+	GMAX,
+	SVM,
+	GVM,
+	GVE,
+	ENC,
+	SPID,
+	GPID,
+	STIME,
+	GTIME,
+	SZP,
+	IDLE,
+	GSM,
+	SMODE,
+	MODE,
+	GMODE,
+	SVEL,
+	VELO,
+	SPWM,
+	GPWM,
+	RPWM,
+	SACC,
+	GACC,
+	SANG,
+	GANG,
+	POS,
+	MOVE,
+	VELP,
+	SUM,
+	STARTC,
+	STOPC,
+	RST
+};

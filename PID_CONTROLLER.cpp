@@ -126,10 +126,11 @@ void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd)
 
 void Rs232(void)
 {	
-	int i, count;
+	int i, count,n_cmd;
 	char *p;
-	char *array[5]; 
-	
+	char *cmd_array[5]; 
+    command command_entered;
+	int cmdnum = 0;
 	count = i = 0;
 	Serial_input();
 	printf("ucommand = %s\n", ucommand);
@@ -138,11 +139,28 @@ void Rs232(void)
 	p = strtok(ucommand, " ");
 	while (p != NULL)
 	{
-		array[i++] = p;
+		cmd_array[i++] = p;
 		p = strtok(NULL, " ");
 		count++;
 	}
 
 	for (i = 0; i<count; ++i)
-		printf("%s\n", array[i]);
+		printf("%s\n", cmd_array[i]);
+	if (strcmp(ucommand, "")==0)
+		strcpy(ucommand, ucommand_old);
+	n_cmd = count;
+	Mtr = (byte)atoi(cmd_array[1]); 
+	cmdnum = searchforcommand(cmd_array[0]);
+	command_entered = (command)cmdnum;
+	switch (command_entered)
+	{
+	case RSTF:
+			printf("RSTF\n");
+			break;
+	case GMAX:
+			printf("GMAX\n");
+			break;
+	default:
+		printf("fucked\n");
+	}
 }

@@ -21,6 +21,49 @@ extern short M2_pwm;
 extern BYTE Mode_ctrl;
 extern long Motor_setpoint[2];
 extern void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
+char *cmd_array[] = {
+	"RSTF",
+	"MADE",
+	"VER",
+	"SKP",
+	"SKI",
+	"SKD",
+	"GO",
+	"VMAX",
+	"GMAX",
+	"SVM",
+	"GVM",
+	"GVE",
+	"ENC",
+	"SPID",
+	"GPID",
+	"STIME",
+	"GTIME",
+	"SZP",
+	"IDLE",
+	"GSM",
+	"SMODE",
+	"MODE",
+	"GMODE",
+	"SVEL",
+	"VELO",
+	"SPWM",
+	"GPWM",
+	"RPWM",
+	"SACC",
+	"GACC",
+	"SANG",
+	"GANG",
+	"POS",
+	"MOVE",
+	"VELP",
+	"SUM",
+	"STARTC",
+	"STOPC",
+	"RST",
+	"NIL"
+};
+
 #define Mode_trp 2
 
 void Config_Watchdog(int ms) // Times vary according to chip used.
@@ -121,7 +164,19 @@ void Init_parameter(BYTE mtr)
 
 void Serial_input(void)
 {	
-	strcpy(ucommand,"rstf 0 1 5");	
+	strcpy(ucommand,"FUCK 0 1 5");	
+}
+int searchforcommand(char * cmd)
+{
+	int index;
+	index = 0;
+	while (strcmp(cmd_array[index], "NIL")!=0)
+	{
+		if (strcmp(cmd_array[index], cmd) == 0)
+			break;
+		index++;
+	}
+	return index;
 }
 
 
