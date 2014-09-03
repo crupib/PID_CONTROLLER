@@ -45,3 +45,5 @@ void Int_1(void);
 void Enable_interrupt(char * Name);
 void Enable_all_interrupts(void);
 void Serial_input(void);
+void Set_mode(byte);
+void Print_com(byte mt, char * string, long value);

@@ -62,7 +62,7 @@ BYTE Mtr_num;
 BYTE Mtr;
 
 
-char Str_tx_1[20];   //       'print in Main do-loop if Tx-enable = 1
+char Str_tx_1[50];   //       'print in Main do-loop if Tx-enable = 1
 long Sum1;
 long Vmax_pos[2];
 long Vmax_neg[2];

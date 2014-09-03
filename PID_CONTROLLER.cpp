@@ -31,7 +31,7 @@ int  framesize = 64;     //'40     ' default use 40 for the frame space
 #define Si = 1
 #define No = 0
 #define Vb6 = "No"
-
+const byte Mode_pos = 1;
 void Hctl_2032(byte Mtrnum);
 void Exe_pid(byte Mtrnum, long Pid_setpoint, long Pid_actual);
 void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
@@ -155,11 +155,56 @@ void Rs232(void)
 	switch (command_entered)
 	{
 	case RSTF:
-			printf("RSTF\n");
+			printf("0 RST Program, 0\n");
+			Watchdog(START);
+			break;
+	case MADE:
+			printf("09-02-2014\n");
+			break;
+	case VER:
+			printf("Version 3.0, 0\n");
+			break;
+	case SKP:
+			Pid_kp[Mtr] = atoi(cmd_array[2]);
+			printf("; Mtr; SKP %i\n", Pid_kp[Mtr]);
+			break;
+	case SKI:
+			Pid_ki[Mtr] = atoi(cmd_array[2]);
+			printf("; Mtr; SKI %i\n", Pid_ki[Mtr]);
+			break;
+	case SKD:
+			Pid_kd[Mtr] = atoi(cmd_array[2]);
+			printf("; Mtr; SKD %i\n", Pid_kd[Mtr]);
+			break;
+	case GO:
+			if (Mode_ctrl != Mode_pos)
+				Set_mode(Mode_pos);
+			Mtr = atoi(cmd_array[1]);
+			Pos_final[Mtr] = atoi(cmd_array[2]);
+			printf("; Mtr; GO %i\n", Pos_final[Mtr]);
+			break;
+	case VMAX:
+			Vmax_pos[Mtr] = atoi(cmd_array[2]);
+			Vmax_neg[Mtr] = -Vmax_pos[Mtr];
+			printf("; Mtr; VMAX %i\n", Vmax_pos[Mtr]);
 			break;
 	case GMAX:
-			printf("GMAX\n");
+			printf("; Mtr; GMAX %i\n", Vmax_pos[Mtr]);
 			break;
+	case SVM:
+			Vel_pos[Mtr] = atoi(cmd_array[2]);
+			Vel_last[Mtr] = Vel_pos[Mtr];
+			Vel_neg[Mtr] = -Vel_pos[Mtr];
+			printf("; Mtr; SVM %i\n", Vel_pos[Mtr]);
+			break;
+	case GVM:
+			printf("; Mtr; GVM %i\n", Vel_pos[Mtr]);
+			break;
+	case GVE:
+			Tx_enable.Tx_enable = 1;
+			Print_com(Mtr, cmd_array[0], Act_speed[Mtr]);
+			break;
+
 	default:
 		printf("fucked\n");
 	}

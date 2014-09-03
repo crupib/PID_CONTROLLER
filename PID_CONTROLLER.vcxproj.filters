@@ -41,7 +41,7 @@
     <ClCompile Include="PID_CONTROLLER.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Config.cpp">
+    <ClCompile Include="Routines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
