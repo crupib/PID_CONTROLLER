@@ -31,7 +31,12 @@ int  framesize = 64;     //'40     ' default use 40 for the frame space
 #define Si = 1
 #define No = 0
 #define Vb6 = "No"
-const byte Mode_pos = 1;
+const byte Mode_pos = 0;
+const byte Mode_vel = 1;
+const byte Mode_trp = 2;
+const byte Mode_velp = 3;
+const byte Mode_idle = 4;
+
 void Hctl_2032(byte Mtrnum);
 void Exe_pid(byte Mtrnum, long Pid_setpoint, long Pid_actual);
 void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
@@ -54,15 +59,25 @@ struct
 {
 	byte Tx_enable : 1;
 }Tx_enable;
+struct
+{
+	byte Hctl_rst_1 : 1;
+}Hctl_rst_1;
+struct
+{
+	byte Hctl_rst_2 : 1;
+}Hctl_rst_2;
+
 void main(void)
 {
 	
-//	byte * F = (byte *)PORTF;
 	byte  F = ports[PORTF];
-//	byte * C = (byte *)PORTC;
+	byte  D4 = ports[DDRC];
 	byte C = ports[PORTC];
 	Test1_led.Test1_led = F & 00000001;
 	Motor_led.Motor_led = C & 00000001;
+	Hctl_rst_1.Hctl_rst_1 = C & 00001000;
+	Hctl_rst_2.Hctl_rst_2 = C & 00010000;
 
 	M1_pwm = 0;
 	M2_pwm = 0;
@@ -204,8 +219,107 @@ void Rs232(void)
 			Tx_enable.Tx_enable = 1;
 			Print_com(Mtr, cmd_array[0], Act_speed[Mtr]);
 			break;
-
+	case ENC:
+			Tx_enable.Tx_enable = 1;
+			Print_com(Mtr, cmd_array[0], Pos_encoder[Mtr]);
+			break;
+	case SPID:
+			Pid_kp[Mtr] = atoi(cmd_array[2]);
+			Pid_ki[Mtr] = atoi(cmd_array[3]);
+			Pid_kd[Mtr] = atoi(cmd_array[4]);
+			printf("Mtr, SPID, kp %i ki %i kd %i", Pid_kp[Mtr], Pid_ki[Mtr], Pid_kd[Mtr]);
+			break;
+	case GPID:
+			printf("Mtr, GPID, kp %i ki %i kd %i", Pid_kp[Mtr], Pid_ki[Mtr], Pid_kd[Mtr]);
+			break;
+	case STIME:
+			Pid_time = atoi(cmd_array[1]);
+			printf("; Mtr; STIME %i\n", Pid_time);
+			break;
+	case GTIME:
+			printf("; Mtr; GTIME %i\n", Pid_time);
+			break;
+	case SZP:
+			switch (Mtr)
+			{
+			case 1:
+				Hctl_rst_1.Hctl_rst_1 = 0;
+				Sleep(1);
+				Hctl_rst_1.Hctl_rst_1 = 1;
+				break;
+			case 2:
+				Hctl_rst_2.Hctl_rst_2 = 0;
+				Sleep(1);
+				Hctl_rst_2.Hctl_rst_2 = 1;
+				break;
+			}
+			Pos_encoder[Mtr] = 0;
+			Old_encoder[Mtr] = 0;
+			Motor_setpoint[Mtr] = 0;
+			Pos_final[Mtr] = 0;
+			New_speed[Mtr] = 0;
+			Hctl_2032(Mtr);
+			printf("; Mtr; SZP %i\n", Pos_encoder[Mtr]);
+			break;
+	case IDLE:
+			Configure_pid(Mtr, 0, 0, 0);
+			printf("Mtr IDLE\n");
+			break;
+	case GSM:
+			if ((Act_speed[Mtr] > 3) || (Act_speed[Mtr] < -3))
+			{
+				Tx_enable.Tx_enable = 1;
+				Print_com(Mtr, cmd_array[Mtr], 0);
+			}
+			else
+			{
+				Tx_enable.Tx_enable = 1;
+				Print_com(Mtr, cmd_array[Mtr], 0);
+			}
+			break;
+	case SMODE:
+			Mode_ctrl = atoi(cmd_array[2]);
+			switch (Mode_ctrl)
+			{
+			case Mode_pos:
+				Configure_pid(Mtr, 200, 0, 200);
+				Motor_setpoint[Mtr] = Pos_encoder[Mtr];
+				break;
+			case Mode_vel:
+				Configure_pid(Mtr, 700, 100, 700);
+				break;
+			case Mode_trp:
+				Configure_pid(Mtr, 500, 100, 500);
+				Pos_final[Mtr] = Pos_encoder[Mtr];
+				break;
+			case Mode_velp:
+				Configure_pid(Mtr, 100, 10, 100);
+				break;
+			case Mode_idle:
+				Configure_pid(Mtr, 0, 0, 0);
+				break;
+			}
+			printf("0 MODE %i\n", Mode_ctrl);
+			break;
+	case MODE:
+			Mode_ctrl = atoi(cmd_array[1]);
+			Set_mode(Mode_ctrl);
+			printf("0 MODE %i\n", Mode_ctrl);
+			break;
+	case GMODE:
+			printf("0 GMODE %i\n", Mode_ctrl);
+			break;
+	case SVEL:
+			if (Mode_ctrl != Mode_vel)
+				Set_mode(Mode_vel);
+			Motor_setpoint[Mtr] = atoi(cmd_array[2]);
+			printf("Mtr SVEL %i\n", Motor_setpoint[Mtr]);
+			break;
 	default:
-		printf("fucked\n");
+		printf("What the hell!\n");
 	}
+}
+void Hctl_2032(byte Mtrnum)
+{
+	//needs to be implemented
 }

@@ -11,7 +11,7 @@ char ucommand_old[30];
 #define True 1
 //Const True = 1
 #define False 0
-#define Mode_trp 2
+//#define Mode_trp 2
 long Pid_kp[2];
 long Pid_ki[2];
 long Pid_kd[2];
@@ -60,7 +60,6 @@ BYTE Pwm_temp;
 BYTE Dir_temp;
 BYTE Mtr_num;
 BYTE Mtr;
-
 
 char Str_tx_1[50];   //       'print in Main do-loop if Tx-enable = 1
 long Sum1;
