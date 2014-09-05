@@ -70,6 +70,10 @@ struct
 {
 	byte Hctl_rst_2 : 1;
 }Hctl_rst_2;
+struct
+{
+	byte Start_move : 1;
+}Start_move;
 
 void main(void)
 {
@@ -346,12 +350,32 @@ void Rs232(void)
 	case GACC:
 			printf("Mtr %i GACC %f\n",Mtr, Deg[Mtr]);
 			break;
+	case SANG:
+			Factor_acc[Mtr] = atoi(cmd_array[2]);
+			printf("Mtr %i SANG %i\n", Mtr, Factor_acc[Mtr]);
+			break;
+	case GANG:
+			printf("Mtr %i GANG %f\n",Mtr ,Factor_acc[Mtr]);
+			break;
+	case POS:
+			if (Mode_ctrl != Mode_trp)
+				Set_mode(Mode_trp);
+			Pos_final[Mtr] = atoi(cmd_array[2]);
+			Vel_pos[Mtr] = atoi(cmd_array[3]);
+			Calc_trapez(Mtr);
+			Start_move.Start_move = True;
+			break;
+	case MOVE:
 
 	default:
 		printf("What the hell!\n");
 	}
 }
 void Hctl_2032(byte Mtrnum)
+{
+	//needs to be implemented
+}
+void Calc_trapez(byte M)
 {
 	//needs to be implemented
 }
