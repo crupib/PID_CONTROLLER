@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "Main.h"
 #include <string.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 //-------------------------------------------------------------------------------------
 //Registers to be filled in per board
 #define PORTA  0x00  
@@ -19,6 +21,7 @@
 #define PIND   0x0b
 #define UDR    0x0c
 #define USR    0x0d
+#define Deg2rad(angle) ((angle) / 180.0 * M_PI)
 byte ports[40] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,3 };
 static const char regfile[] = "m128def.dat"; //      ' specify the used micro
 
@@ -315,6 +318,35 @@ void Rs232(void)
 			Motor_setpoint[Mtr] = atoi(cmd_array[2]);
 			printf("Mtr SVEL %i\n", Motor_setpoint[Mtr]);
 			break;
+	case VELO:
+			if (Mode_ctrl != Mode_trp)
+				Set_mode(Mode_vel);
+			Motor_setpoint[1] = atoi(cmd_array[1]);
+			Motor_setpoint[2] = atoi(cmd_array[2]);
+			break;
+	case SPWM:
+			Max_pwm[Mtr] = atoi(cmd_array[2]);
+			printf("Mtr %i SPWM %i\n", Mtr, Max_pwm[Mtr]);
+			break;
+	case GPWM:
+			printf("Mtr GPWM %i\n", Max_pwm[Mtr]);
+			break;
+	case RPWM:
+			printf("Mtr RPWM %i\n", Rpwm[Mtr]);
+			break;
+	case SACC:
+			Deg[Mtr] = (float)atof(cmd_array[2]);
+			Rad[Mtr] = (float)Deg2rad(Deg[Mtr]);
+			Rad[Mtr] = tan(Rad[Mtr]);
+			Vel_max[Mtr] = (float)Vel_pos[Mtr]*10;
+			Point_p1[Mtr] = (long) (Vel_max[Mtr] / Rad[Mtr]);
+			Point_p1[Mtr] = Point_p1[Mtr] * 10;
+			printf("Mtr %i SACC %i\n",Mtr, Deg[Mtr]);
+			break;
+	case GACC:
+			printf("Mtr %i GACC %f\n",Mtr, Deg[Mtr]);
+			break;
+
 	default:
 		printf("What the hell!\n");
 	}

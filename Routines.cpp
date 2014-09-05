@@ -2,24 +2,24 @@
 #include <string.h>
 
 extern char ucommand[30];
-extern long Vel_pos[2];
+extern long Vel_pos[3];
 extern BYTE Pid_time;
 extern long Sum1;
-extern long Vmax_pos[2];
-extern long Vmax_neg[2];
+extern long Vmax_pos[3];
+extern long Vmax_neg[3];
 extern char Str_tx_1[50];
-extern long Vel_neg[2];
-extern long Vel_last[2];
-extern BYTE Max_pwm[2];
-extern long Factor_acc[2];
-extern float Deg[2];
-extern long Point_p1[2];
+extern long Vel_neg[3];
+extern long Vel_last[3];
+extern BYTE Max_pwm[3];
+extern long Factor_acc[3];
+extern float Deg[3];
+extern long Point_p1[3];
 extern BYTE Mtr_num;
 extern BYTE Mtr;
 extern short M1_pwm;
 extern short M2_pwm;
 extern BYTE Mode_ctrl;
-extern long Motor_setpoint[2];
+extern long Motor_setpoint[3];
 extern void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
 char *cmd_array[] = {
 	"RSTF",
