@@ -49,32 +49,6 @@ void Print_com(byte Mt, char * Stringa, long Value);
 void Set_mode(byte Mode_control);
 long Max_minl(long I);
 
-struct
-{
-	byte Test1_led : 1;
-}Test1_led;
-struct
-{
-	byte Motor_led : 1;
-}Motor_led;
-
-struct
-{
-	byte Tx_enable : 1;
-}Tx_enable;
-struct
-{
-	byte Hctl_rst_1 : 1;
-}Hctl_rst_1;
-struct
-{
-	byte Hctl_rst_2 : 1;
-}Hctl_rst_2;
-struct
-{
-	byte Start_move : 1;
-}Start_move;
-
 void main(void)
 {
 	
@@ -102,6 +76,7 @@ void main(void)
 		"Timer1", 1);
 	Config_timer0(TIMER, NONE,  0, "Timer0", 64);
 	On_interrupt("Timer01", &Timer_01);
+	On_interrupt("Timer0", &Timer_0);
 	On_interrupt("Int0", &Int_0);
 	On_interrupt("Int0", &Int_1);
 	On_interrupt("Urxc", &Rs232);
@@ -392,7 +367,7 @@ void Rs232(void)
 			Sum1 = atoi(cmd_array[1]);
 			break;
 	case STARTC:
-			Start_move = True;
+			Start_move.Start_move = True;
 			printf("0 START, 0\n");
 			break;
 	case STOPC:
@@ -428,4 +403,56 @@ void Hctl_2032(byte Mtrnum)
 void Calc_trapez(byte M)
 {
 	//needs to be implemented
+}
+void Timer_0(void)
+{
+	printf("Timer_01\n");
+	if (Timer_pid == Pid_time)
+	{
+		Timer_pid = 0;
+		for (Mtr_num = 1; Mtr_num < 3; Mtr_num++)
+		{
+			Motor_led.Motor_led = True;
+			Hctl_2032(Mtr_num);
+			Act_speed[Mtr_num] = Pos_encoder[Mtr_num] - Old_encoder[Mtr_num];
+			Old_encoder[Mtr_num] = Pos_encoder[Mtr_num];
+			New_speed[Mtr_num] = Pos_final[Mtr_num] - Pos_encoder[Mtr_num]; 
+			Difference[Mtr_num] = New_speed[Mtr_num];
+			if (Flag_velocity.Flag_velocity == True)
+			{
+				if (Pos_final[Mtr_num] >= Pos_encoder[Mtr_num])
+					Dir_diff[Mtr_num] = True;
+				if (Difference[Mtr_num] < 10000)
+				{
+					Acc_speed_p[Mtr_num] = New_speed[Mtr_num] / Factor_acc[Mtr_num];
+					if (Acc_speed_p[Mtr_num] < 1)
+						Acc_speed_p[Mtr_num] = 1;
+					if (New_speed[Mtr_num] > Vmax_pos[Mtr_num])
+						New_speed[Mtr_num] = Vmax_pos[Mtr_num];
+					if (New_speed[Mtr_num] > Acc_speed_p[Mtr_num])
+						New_speed[Mtr_num] = Acc_speed_p[Mtr_num];
+				}
+				else
+				{
+					Dir_diff[Mtr_num] = False;
+					if (Difference[Mtr_num] >= -10000)
+						Acc_speed_n[Mtr_num] = New_speed[Mtr_num] / Factor_acc[Mtr_num];
+					if (Acc_speed_n[Mtr_num] > -1)
+						Acc_speed_n[Mtr_num] = -1;
+					if (New_speed[Mtr_num] < Vmax_neg[Mtr_num])
+						New_speed[Mtr_num] = Vmax_neg[Mtr_num];
+					if (New_speed[Mtr_num] < Acc_speed_n[Mtr_num])
+						New_speed[Mtr_num] = Acc_speed_n[Mtr_num];
+				}
+			}
+			else
+			{
+
+			}
+
+
+		}
+	}
+
+
 }

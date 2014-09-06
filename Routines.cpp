@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <string.h>
+#define True 1
 
 extern char ucommand[30];
 extern long Vel_pos[3];
@@ -16,11 +17,13 @@ extern float Deg[3];
 extern long Point_p1[3];
 extern BYTE Mtr_num;
 extern BYTE Mtr;
+extern BYTE Timer_pid;
 extern short M1_pwm;
 extern short M2_pwm;
 extern BYTE Mode_ctrl;
 extern long Motor_setpoint[3];
 extern void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
+
 char *cmd_array[] = {
 	"RSTF",
 	"MADE",
@@ -106,6 +109,7 @@ void Timer_01(void)
 {
 	printf("Timer_01\n");
 }
+
 void Int_0(void)
 {
 	printf("Int_0\n");

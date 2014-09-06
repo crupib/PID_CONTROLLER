@@ -545,37 +545,37 @@ Difference(mtr_num) = New_speed(mtr_num)       ' = Pos_final(Mtr_num)-Pos_encode
 ' if it is changed before you remove velocity then it accelerates 'if it is changed before of sign you remove speed and then it accelerates
 '------------------------------------------------------------------------
 If Flag_velocity = True Then       '= Velocity Profile Mode
-If Pos_final(mtr_num) = > Pos_encoder(mtr_num) Then       'current motor position is => desired position
-Dir_diff(mtr_num) = True       '---> position is greater than
-If Difference(mtr_num) <= 10000 Then Acc_speed_p(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       '99/100= 0 = decellerate
-If Acc_speed_p(mtr_num) < 1 Then Acc_speed_p(mtr_num) = 1
-If New_speed(mtr_num) > Vmax_pos(mtr_num) Then New_speed(mtr_num) = Vmax_pos(mtr_num)
-If New_speed(mtr_num) > Acc_speed_p(mtr_num) Then New_speed(mtr_num) = Acc_speed_p(mtr_num)
+	If Pos_final(mtr_num) = > Pos_encoder(mtr_num) Then       'current motor position is => desired position
+	Dir_diff(mtr_num) = True       '---> position is greater than
+	If Difference(mtr_num) <= 10000 Then Acc_speed_p(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       '99/100= 0 = decellerate
+	If Acc_speed_p(mtr_num) < 1 Then Acc_speed_p(mtr_num) = 1
+	If New_speed(mtr_num) > Vmax_pos(mtr_num) Then New_speed(mtr_num) = Vmax_pos(mtr_num)
+	If New_speed(mtr_num) > Acc_speed_p(mtr_num) Then New_speed(mtr_num) = Acc_speed_p(mtr_num)
 Else  '................................'current motor position is < desired position '99 / 100 = 0
-Dir_diff(mtr_num) = False       '<--- position is less than
-If Difference(mtr_num) = > -10000 Then Acc_speed_n(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       'decellerate
-If Acc_speed_n(mtr_num) > -1 Then Acc_speed_n(mtr_num) = -1
-If New_speed(mtr_num) < Vmax_neg(mtr_num) Then New_speed(mtr_num) = Vmax_neg(mtr_num)
-If New_speed(mtr_num) < Acc_speed_n(mtr_num) Then New_speed(mtr_num) = Acc_speed_n(mtr_num)
+	Dir_diff(mtr_num) = False       '<--- position is less than
+	If Difference(mtr_num) = > -10000 Then Acc_speed_n(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       'decellerate
+	If Acc_speed_n(mtr_num) > -1 Then Acc_speed_n(mtr_num) = -1
+	If New_speed(mtr_num) < Vmax_neg(mtr_num) Then New_speed(mtr_num) = Vmax_neg(mtr_num)
+	If New_speed(mtr_num) < Acc_speed_n(mtr_num) Then New_speed(mtr_num) = Acc_speed_n(mtr_num)
 End If       'ELSE Flag_velocity = False; mode =  Position, Velocity, Trapizoidal or Idle.
 Else     '*CHECK-"If Dir_diff(mtr_num)=True" is determined once per move in subroutine Calc_trapez(mtr)-What!!
-If Dir_diff(mtr_num) = True Then       'Pos_final(mtr ) => Pos_encoder(mtr ) - see subroutine ' Calc_trapez(mtr)'
-New_encoder(mtr_num) = Trapez_1(mtr_num) - Pos_encoder(mtr_num)       '30000 - 10000 = 20000
-New_encoder(mtr_num) = Point_p1(mtr_num) - New_encoder(mtr_num)       '20000 - 20000 = 0
-If Pos_encoder(mtr_num) < Trapez_1(mtr_num) Then Acc_speed(mtr_num) = New_encoder(mtr_num) / Factor_acc(mtr_num)       'acceleration before Trapez_1 -->
-If Pos_encoder(mtr_num) = > Trapez_2(mtr_num) Then Acc_speed(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       'deceleration after trap 2-->
-If Acc_speed(mtr_num) < 1 Then Acc_speed(mtr_num) = 1
-If New_speed(mtr_num) > Vel_pos(mtr_num) Then New_speed(mtr_num) = Vel_pos(mtr_num)       '     positive speed - keep within set maximum speed
-If New_speed(mtr_num) > Acc_speed(mtr_num) Then New_speed(mtr_num) = Acc_speed(mtr_num)       ' reduce the speed  'reduced  acceleration
+	If Dir_diff(mtr_num) = True Then       'Pos_final(mtr ) => Pos_encoder(mtr ) - see subroutine ' Calc_trapez(mtr)'
+		New_encoder(mtr_num) = Trapez_1(mtr_num) - Pos_encoder(mtr_num)       '30000 - 10000 = 20000
+		New_encoder(mtr_num) = Point_p1(mtr_num) - New_encoder(mtr_num)       '20000 - 20000 = 0
+		If Pos_encoder(mtr_num) < Trapez_1(mtr_num) Then Acc_speed(mtr_num) = New_encoder(mtr_num) / Factor_acc(mtr_num)       'acceleration before Trapez_1 -->
+		If Pos_encoder(mtr_num) = > Trapez_2(mtr_num) Then Acc_speed(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       'deceleration after trap 2-->
+		If Acc_speed(mtr_num) < 1 Then Acc_speed(mtr_num) = 1
+		If New_speed(mtr_num) > Vel_pos(mtr_num) Then New_speed(mtr_num) = Vel_pos(mtr_num)       '     positive speed - keep within set maximum speed
+		If New_speed(mtr_num) > Acc_speed(mtr_num) Then New_speed(mtr_num) = Acc_speed(mtr_num)       ' reduce the speed  'reduced  acceleration
 Else  'Dir_diff(mtr_num) = False        'Pos_final(mtr) < Pos_encoder(mtr)
-New_encoder(mtr_num) = Trapez_1(mtr_num) - Pos_encoder(mtr_num)       '80000 - 99000    = -20000
-New_encoder(mtr_num) = New_encoder(mtr_num) + Point_p1(mtr_num)       '21000 -  20000)   =  -1000
-New_encoder(mtr_num) = -new_encoder(mtr_num)       'invert sign of encoder counts
-If Pos_encoder(mtr_num) = > Trapez_1(mtr_num) Then Acc_speed(mtr_num) = New_encoder(mtr_num) / Factor_acc(mtr_num)       'acceleration Before Trapez_1 < - -
-If Pos_encoder(mtr_num) < Trapez_2(mtr_num) Then Acc_speed(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       'deceleration after Trapez_2 <--
-If Acc_speed(mtr_num) > -1 Then Acc_speed(mtr_num) = -1
-If New_speed(mtr_num) < Vel_neg(mtr_num) Then New_speed(mtr_num) = Vel_neg(mtr_num)       'negative speed - keep within set maximum speed
-If New_speed(mtr_num) < Acc_speed(mtr_num) Then New_speed(mtr_num) = Acc_speed(mtr_num)       'reduce the speed
+		New_encoder(mtr_num) = Trapez_1(mtr_num) - Pos_encoder(mtr_num)       '80000 - 99000    = -20000
+		New_encoder(mtr_num) = New_encoder(mtr_num) + Point_p1(mtr_num)       '21000 -  20000)   =  -1000
+		New_encoder(mtr_num) = -new_encoder(mtr_num)       'invert sign of encoder counts
+		If Pos_encoder(mtr_num) = > Trapez_1(mtr_num) Then Acc_speed(mtr_num) = New_encoder(mtr_num) / Factor_acc(mtr_num)       'acceleration Before Trapez_1 < - -
+		If Pos_encoder(mtr_num) < Trapez_2(mtr_num) Then Acc_speed(mtr_num) = New_speed(mtr_num) / Factor_acc(mtr_num)       'deceleration after Trapez_2 <--
+		If Acc_speed(mtr_num) > -1 Then Acc_speed(mtr_num) = -1
+		If New_speed(mtr_num) < Vel_neg(mtr_num) Then New_speed(mtr_num) = Vel_neg(mtr_num)       'negative speed - keep within set maximum speed
+		If New_speed(mtr_num) < Acc_speed(mtr_num) Then New_speed(mtr_num) = Acc_speed(mtr_num)       'reduce the speed
 End If
 End If
 

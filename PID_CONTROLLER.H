@@ -40,6 +40,7 @@ void Config_timer0(timer_type type, int_state edge, int clear_timer,
 	               char * Configuration, int Prescale);
 void On_interrupt(char * Name, void * routine);
 void Timer_01(void);
+void Timer_0(void);
 void Int_0(void);
 void Int_1(void);
 void Enable_interrupt(char * Name);

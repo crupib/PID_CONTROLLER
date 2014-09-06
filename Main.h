@@ -78,6 +78,35 @@ short Pwm1b;
 short M1_pwm;
 short M2_pwm;
 void Rs232(void);
+struct 
+{
+	byte Test1_led : 1;
+}Test1_led;
+
+struct 
+{
+	byte Tx_enable : 1;
+}Tx_enable;
+struct 
+{
+	byte Hctl_rst_1 : 1;
+}Hctl_rst_1;
+struct 
+{
+	byte Hctl_rst_2 : 1;
+}Hctl_rst_2;
+struct 
+{
+	byte Start_move : 1;
+}Start_move;
+struct 
+{
+	byte Motor_led : 1;
+}Motor_led;
+struct
+{
+	byte Flag_velocity : 1;
+}Flag_velocity;
 
 enum command {
 	RSTF,
