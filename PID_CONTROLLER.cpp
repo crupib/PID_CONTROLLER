@@ -366,10 +366,60 @@ void Rs232(void)
 			Start_move.Start_move = True;
 			break;
 	case MOVE:
-
+			if (Mode_ctrl != Mode_trp)
+				Set_mode(Mode_trp);
+			Pos_final[1] = atoi(cmd_array[1]);
+			Pos_final[2] = atoi(cmd_array[2]);
+			Vel_pos[1] = atoi(cmd_array[3]);
+			Vel_pos[2] = atoi(cmd_array[3]);
+			Calc_trapez(1);
+			Calc_trapez(2);
+			printf("0 Move %i %i\n", Pos_final[1], Pos_final[2]);
+			break;
+	case VELP:
+			if (Mode_ctrl != Mode_velp)
+				Set_mode(Mode_velp);
+			Acc_speed_p[1] = Vmax_pos[1];
+			Acc_speed_p[2] = Vmax_pos[2];
+			Acc_speed_n[1] = Vmax_neg[1];
+			Acc_speed_n[2] = Vmax_neg[2];
+			Factor_ang[1] = Factor_acc[1];
+			Factor_ang[2] = Factor_acc[2];
+			Pos_final[1] = atoi(cmd_array[1]);
+			Pos_final[2] = atoi(cmd_array[2]);
+			break;
+	case SUM:
+			Sum1 = atoi(cmd_array[1]);
+			break;
+	case STARTC:
+			Start_move = True;
+			printf("0 START, 0\n");
+			break;
+	case STOPC:
+			Mode_ctrl = Mode_idle;
+			printf("0 STOP, 0\n");
+			break;
+	case RST:
+			if (Mtr == 1)
+			{
+				Hctl_rst_1.Hctl_rst_1= 0;
+				Sleep(1);
+				Hctl_rst_1.Hctl_rst_1= 1;
+			}
+			if (Mtr == 2)
+			{
+				Hctl_rst_2.Hctl_rst_2 = 0;
+				Sleep(1);
+				Hctl_rst_2.Hctl_rst_2 = 1;
+			}
+			Hctl_2032(Mtr);
+			printf("Mtr %i RST %i\n\r", Mtr, Pos_encoder[Mtr]);
+			break;
 	default:
-		printf("What the hell!\n");
+			printf("What the hell!\n");
 	}
+	strcpy(Ucommand_old, Ucommand);
+	strcpy(Ucommand, "");
 }
 void Hctl_2032(byte Mtrnum)
 {
