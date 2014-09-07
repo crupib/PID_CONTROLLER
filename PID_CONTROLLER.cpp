@@ -447,7 +447,18 @@ void Timer_0(void)
 			}
 			else
 			{
-
+				if (Dir_diff[Mtr] = True)
+				{
+					New_encoder[Mtr_num] = Trapez_1[Mtr_num] - Pos_encoder[Mtr_num];
+					New_encoder[Mtr_num] = Point_p1[Mtr_num] - New_encoder[Mtr_num];
+					if (Pos_encoder[Mtr_num]< Trapez_1[Mtr_num])  Acc_speed[Mtr_num] = New_encoder[Mtr_num] / Factor_acc[Mtr_num];      
+					if (Pos_encoder[Mtr_num] >= Trapez_2[Mtr_num]) Acc_speed[Mtr_num] = New_speed[Mtr_num] / Factor_acc[Mtr_num];
+					if (Acc_speed[Mtr_num] < 1) Acc_speed[Mtr_num] = 1;
+					if (New_speed[Mtr_num] > Vel_pos[Mtr_num])  New_speed[Mtr_num] = Vel_pos[Mtr_num];
+					if (New_speed[Mtr_num] > Acc_speed[Mtr_num]) New_speed[Mtr_num] = Acc_speed[Mtr_num];
+				}
+				else
+				{ }
 			}
 
 
