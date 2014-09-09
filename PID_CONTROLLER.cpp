@@ -450,7 +450,7 @@ void Timer_0(void)
 				if (Dir_diff[Mtr] = True)
 				{
 					New_encoder[Mtr_num] = Trapez_1[Mtr_num] - Pos_encoder[Mtr_num];
-					New_encoder[Mtr_num] = Point_p1[Mtr_num] - New_encoder[Mtr_num];
+					New_encoder[Mtr_num] = Point_p1[Mtr_num] - New_encoder[Mtr_num];;
 					if (Pos_encoder[Mtr_num]< Trapez_1[Mtr_num])  Acc_speed[Mtr_num] = New_encoder[Mtr_num] / Factor_acc[Mtr_num];      
 					if (Pos_encoder[Mtr_num] >= Trapez_2[Mtr_num]) Acc_speed[Mtr_num] = New_speed[Mtr_num] / Factor_acc[Mtr_num];
 					if (Acc_speed[Mtr_num] < 1) Acc_speed[Mtr_num] = 1;
@@ -458,12 +458,52 @@ void Timer_0(void)
 					if (New_speed[Mtr_num] > Acc_speed[Mtr_num]) New_speed[Mtr_num] = Acc_speed[Mtr_num];
 				}
 				else
-				{ }
+				{
+					New_encoder[Mtr_num] = Trapez_1[Mtr_num] - Pos_encoder[Mtr_num];
+					New_encoder[Mtr_num] = New_encoder[Mtr_num] + Point_p1[Mtr_num];
+					New_encoder[Mtr_num] = -New_encoder[Mtr_num];
+					if (Pos_encoder[Mtr_num] >= Trapez_1[Mtr_num])  Acc_speed[Mtr_num] = New_encoder[Mtr_num] / Factor_acc[Mtr_num];
+					if (Pos_encoder[Mtr_num] < Trapez_2[Mtr_num]) Acc_speed[Mtr_num] = New_speed[Mtr_num] / Factor_acc[Mtr_num];
+					if (Acc_speed[Mtr_num] > -1) Acc_speed[Mtr_num] = -1;
+					if (New_speed[Mtr_num] < Vel_nwf[Mtr_num])  New_speed[Mtr_num] = Vel_neg[Mtr_num];
+					if (New_speed[Mtr_num] < Acc_speed[Mtr_num]) New_speed[Mtr_num] = Acc_speed[Mtr_num];
+				}
 			}
+			switch (Mode_ctrl)
+			{
+			case Mode_pos:
+				Exe_pid(Mtr, Pos_final[Mtr_num], Pos_encoder[Mtr_num]);
+				break;
+			case Mode_vel:
+				Exe_pid(Mtr_num, Motor_setpoint[Mtr_num], Act_speed[Mtr_num]);
+				break;
+			case Mode_trp:			
+				Motor_setpoint[Mtr_num] = New_speed[Mtr];
+				if (Start_move.Start_move == 0) Motor_setpoint[Mtr_num] = 0;
+				Exe_pid(Mtr_num, Motor_setpoint[Mtr_num], Act_speed[Mtr_num]);
+				break;
 
-
+			case Mode_velp:
+				Configure_pid(Mtr_num, 0, 0, 0);
+				if (Mtr_num == 1) M1_pwm = 0;
+				if (Mtr_num == 2) M2_pwm = 0;
+				break;
+			}
+			if (abs(Act_speed[Mtr_num]) > 2)
+				Mstop_ctr[Mtr_num] = 0;
+			else if (Mstop_ctr[Mtr_num] < 200){
+				Mstop_ctr[Mtr_num]++;
+			}
+			if (Mstop_ctr[Mtr_num] > 150)
+				Temp_bit.Temp_bit= 0;
+			else
+				Temp_bit.Temp_bit= 1;
+			if (Mtr_num = 1)
+				Stop1_bit.Stop1_bit= 0;
+			else
+				Stop2_bit.Stop2_bit = 1;
 		}
 	}
-
-
+	Timer_pid++;
+	Motor_led.Motor_led = False;
 }

@@ -78,6 +78,21 @@ short Pwm1b;
 short M1_pwm;
 short M2_pwm;
 void Rs232(void);
+
+struct
+{
+	byte Temp_bit : 1;
+}Temp_bit;
+
+struct
+{
+	byte Stop1_bit : 1;
+}Stop1_bit;
+struct
+{
+	byte Stop2_bit : 1;
+}Stop2_bit;
+
 struct 
 {
 	byte Test1_led : 1;
