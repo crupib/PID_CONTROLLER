@@ -7,7 +7,7 @@
 'date 05-28-2007 'version BASCOM 1.8.11.3
 'the serial port in this version does not interfere with the timer 0-1 '
 'transmission of the position performed at the end of the cycle, PID at beginning of the cycle 'MAIN Loop
-'***********************************************************************************************************
+'**************************************************f*********************************************************
 '
 '
 ' Input Format Command:

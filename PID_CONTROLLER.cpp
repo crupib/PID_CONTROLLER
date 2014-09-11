@@ -41,7 +41,7 @@ const byte Mode_velp = 3;
 const byte Mode_idle = 4;
 
 void Hctl_2032(byte Mtrnum);
-void Exe_pid(byte Mtrnum, long Pid_setpoint, long Pid_actual);
+void Exe_pid(byte * Mtrnum, long * Pid_setpoint, long * Pid_actual);
 void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
 void Init_parameter(byte M);
 void Calc_trapez(byte M);
@@ -129,7 +129,15 @@ void Rs232(void)
     command command_entered;
 	int cmdnum = 0;
 	count = i = 0;
-	Serial_input();
+	Serial_input(); 
+	byte Mtrnum = 1;
+	long Setpoint = 3;
+	long * Pid_setpoint = &Setpoint;
+	long actual = 3;
+	long * Pid_actual = &actual;
+
+	Exe_pid(&Mtrnum, Pid_setpoint, Pid_actual);
+	
 	printf("ucommand = %s\n", ucommand);
 	strupr(ucommand);
 	printf("ucommand = %s\n", ucommand);	
@@ -465,22 +473,22 @@ void Timer_0(void)
 					if (Pos_encoder[Mtr_num] >= Trapez_1[Mtr_num])  Acc_speed[Mtr_num] = New_encoder[Mtr_num] / Factor_acc[Mtr_num];
 					if (Pos_encoder[Mtr_num] < Trapez_2[Mtr_num]) Acc_speed[Mtr_num] = New_speed[Mtr_num] / Factor_acc[Mtr_num];
 					if (Acc_speed[Mtr_num] > -1) Acc_speed[Mtr_num] = -1;
-					if (New_speed[Mtr_num] < Vel_nwf[Mtr_num])  New_speed[Mtr_num] = Vel_neg[Mtr_num];
+					if (New_speed[Mtr_num] < Vel_neg[Mtr_num])  New_speed[Mtr_num] = Vel_neg[Mtr_num];
 					if (New_speed[Mtr_num] < Acc_speed[Mtr_num]) New_speed[Mtr_num] = Acc_speed[Mtr_num];
 				}
 			}
 			switch (Mode_ctrl)
 			{
 			case Mode_pos:
-				Exe_pid(Mtr, Pos_final[Mtr_num], Pos_encoder[Mtr_num]);
+				Exe_pid(&Mtr, &Pos_final[Mtr_num], &Pos_encoder[Mtr_num]);
 				break;
 			case Mode_vel:
-				Exe_pid(Mtr_num, Motor_setpoint[Mtr_num], Act_speed[Mtr_num]);
+				Exe_pid(&Mtr_num, &Motor_setpoint[Mtr_num], &Act_speed[Mtr_num]);
 				break;
 			case Mode_trp:			
 				Motor_setpoint[Mtr_num] = New_speed[Mtr];
 				if (Start_move.Start_move == 0) Motor_setpoint[Mtr_num] = 0;
-				Exe_pid(Mtr_num, Motor_setpoint[Mtr_num], Act_speed[Mtr_num]);
+				Exe_pid(&Mtr_num, &Motor_setpoint[Mtr_num], &Act_speed[Mtr_num]);
 				break;
 
 			case Mode_velp:
@@ -506,4 +514,8 @@ void Timer_0(void)
 	}
 	Timer_pid++;
 	Motor_led.Motor_led = False;
+}
+void Exe_pid(byte * Mtrnum, long *Pid_setpoint, long * Pid_actual)
+{
+	printf("exe_pid %d\n", *Pid_setpoint);
 }
