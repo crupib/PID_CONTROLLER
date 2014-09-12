@@ -131,9 +131,9 @@ void Rs232(void)
 	count = i = 0;
 	Serial_input(); 
 	byte Mtrnum = 1;
-	long Setpoint = 3;
+	long Setpoint = 2;
 	long * Pid_setpoint = &Setpoint;
-	long actual = 3;
+	long actual = 2;
 	long * Pid_actual = &actual;
 
 	Exe_pid(&Mtrnum, Pid_setpoint, Pid_actual);
@@ -518,4 +518,7 @@ void Timer_0(void)
 void Exe_pid(byte * Mtrnum, long *Pid_setpoint, long * Pid_actual)
 {
 	printf("exe_pid %d\n", *Pid_setpoint);
-}
+	Pid_error[*Mtrnum] = *Pid_setpoint - *Pid_actual;
+	Pid_out[*Mtrnum] = Pid_error[*Mtrnum] * Pid_kp[*Mtrnum];
+	Ptemp[*Mtrnum] = Pid_error[*Mtrnum] - Pid_prev_error[*Mtrnum];
+	Ptemp[*Mtrnum] = Ptemp[*Mtrnum] * Pid_kd[*Mtrnum];
