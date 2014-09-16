@@ -29,7 +29,7 @@ long New_speed[3];
 long Act_speed[3];
 long Acc_speed[3];
 long Pos_final[3];
-WORD Temp_enc;
+long * Temp_enc;
 char Ucommand[30];
 char Ucommand_old[30];
 char Char[20];
@@ -122,6 +122,35 @@ struct
 {
 	byte Flag_velocity : 1;
 }Flag_velocity;
+
+struct
+{
+	byte M1_dir_bit : 1;
+}M1_dir_bit;
+
+struct
+{
+	byte M2_dir_bit : 1;
+}M2_dir_bit;
+
+struct
+{
+	byte Hctl_xy : 1;
+}Hctl_xy;
+struct
+{
+	byte Hctl_oe : 1;
+}Hctl_oe;
+
+struct
+{
+	byte Hctl_sel1 : 1;
+}Hctl_sel1;
+struct
+{
+	byte Hctl_sel2 : 1;
+}Hctl_sel2;
+
 
 enum command {
 	RSTF,

@@ -48,3 +48,4 @@ void Enable_all_interrupts(void);
 void Serial_input(void);
 void Set_mode(byte);
 void Print_com(byte mt, char * string, long value);
+long int Max_minl(long * I);

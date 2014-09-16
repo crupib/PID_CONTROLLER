@@ -55,11 +55,16 @@ void main(void)
 	byte  F = ports[PORTF];
 	byte  D4 = ports[DDRC];
 	byte C = ports[PORTC];
+	byte D = ports[PORTD];
 	Test1_led.Test1_led = F & 00000001;
 	Motor_led.Motor_led = C & 00000001;
 	Hctl_rst_1.Hctl_rst_1 = C & 00001000;
 	Hctl_rst_2.Hctl_rst_2 = C & 00010000;
-
+	M1_dir_bit.M1_dir_bit = D & 00100000;
+	M2_dir_bit.M2_dir_bit = D & 01000000;
+	Hctl_xy.Hctl_xy = C & 00000100;
+	Hctl_oe.Hctl_oe = C & 00000100;
+	
 	M1_pwm = 0;
 	M2_pwm = 0;
 	
@@ -404,9 +409,16 @@ void Rs232(void)
 	strcpy(Ucommand_old, Ucommand);
 	strcpy(Ucommand, "");
 }
-void Hctl_2032(byte Mtrnum)
+void Hctl_2032(byte Mtr_num)
 {
-	//needs to be implemented
+	Temp_enc = &Pos_encoder[Mtr_num];
+	if (Mtr_num == 1)
+		Hctl_xy.Hctl_xy= 0;
+	else
+		Hctl_xy.Hctl_xy= 1;
+	Hctl_oe.Hctl_oe = 0;
+	Hctl_sel1 = 0;
+
 }
 void Calc_trapez(byte M)
 {
@@ -515,6 +527,11 @@ void Timer_0(void)
 	Timer_pid++;
 	Motor_led.Motor_led = False;
 }
+long Max_minl(long I)
+{
+	//to be implemented
+	return (long)-1;
+}
 void Exe_pid(byte * Mtrnum, long *Pid_setpoint, long * Pid_actual)
 {
 	printf("exe_pid %d\n", *Pid_setpoint);
@@ -522,3 +539,31 @@ void Exe_pid(byte * Mtrnum, long *Pid_setpoint, long * Pid_actual)
 	Pid_out[*Mtrnum] = Pid_error[*Mtrnum] * Pid_kp[*Mtrnum];
 	Ptemp[*Mtrnum] = Pid_error[*Mtrnum] - Pid_prev_error[*Mtrnum];
 	Ptemp[*Mtrnum] = Ptemp[*Mtrnum] * Pid_kd[*Mtrnum];
+	Pid_prev_error[*Mtrnum] = Pid_error[*Mtrnum];
+	Pid_out[*Mtrnum] = Pid_out[*Mtrnum] + Ptemp[*Mtrnum];
+	Ptemp[*Mtrnum] = Pid_integral_error[*Mtrnum] * Pid_ki[*Mtrnum];
+	Pid_out[*Mtrnum] = Pid_out[*Mtrnum] + Ptemp[*Mtrnum];
+	Pid_out[*Mtrnum] = Max_minl(Pid_out[*Mtrnum] / Pid_scale[*Mtrnum]);
+	Pwm_temp = (byte)abs(Pid_out[*Mtrnum]);
+	if (Pwm_temp < 255) {
+		Pid_error[*Mtrnum] = Max_minl(Pid_out[*Mtrnum]) + Pid_integral_error[*Mtrnum];
+		Pid_integral_error[*Mtrnum] = Pid_error[*Mtrnum];
+	}
+	if (Pid_out[*Mtrnum] >= 0)
+		Dir_temp = 0;
+	else
+		Dir_temp = 1;
+	if (Pwm_temp >= Max_pwm[*Mtrnum])
+		Pwm_temp = Max_pwm[*Mtrnum];
+	Rpwm[*Mtrnum] = Pwm_temp;
+	if (*Mtrnum == 1)
+	{
+		M1_dir_bit.M1_dir_bit = Dir_temp;
+		M1_pwm = Pwm_temp;
+	}
+	else
+	{
+		M2_dir_bit.M2_dir_bit = Dir_temp;
+		M2_pwm = Pwm_temp;
+	}
+}
