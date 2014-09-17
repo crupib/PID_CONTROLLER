@@ -23,7 +23,7 @@ long Ptemp[3];
 long Motor_setpoint[3];
 long Pid_out[3];
 BYTE Timer_pid;
-long Pos_encoder[3];
+long Pos_encoder[4];
 long Old_encoder[3];
 long New_speed[3];
 long Act_speed[3];
@@ -151,7 +151,10 @@ struct
 	byte Hctl_sel2 : 1;
 }Hctl_sel2;
 
-
+struct
+{
+	byte Hctl_data : 1;
+}Hctl_data;
 enum command {
 	RSTF,
 	MADE,

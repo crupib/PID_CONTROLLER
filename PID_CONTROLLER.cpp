@@ -56,6 +56,8 @@ void main(void)
 	byte  D4 = ports[DDRC];
 	byte C = ports[PORTC];
 	byte D = ports[PORTD];
+	byte pina = ports[PINA];
+	
 	Test1_led.Test1_led = F & 00000001;
 	Motor_led.Motor_led = C & 00000001;
 	Hctl_rst_1.Hctl_rst_1 = C & 00001000;
@@ -64,6 +66,7 @@ void main(void)
 	M2_dir_bit.M2_dir_bit = D & 01000000;
 	Hctl_xy.Hctl_xy = C & 00000100;
 	Hctl_oe.Hctl_oe = C & 00000100;
+	Hctl_data.Hctl_data = ports[PINA];
 	
 	M1_pwm = 0;
 	M2_pwm = 0;
@@ -417,12 +420,46 @@ void Hctl_2032(byte Mtr_num)
 	else
 		Hctl_xy.Hctl_xy= 1;
 	Hctl_oe.Hctl_oe = 0;
-	Hctl_sel1 = 0;
 
+	Hctl_sel1.Hctl_sel1 = 0;
+	Hctl_sel2.Hctl_sel2 = 0;
+	Hctl_data.Hctl_data = Temp_enc[3];
+
+	Hctl_sel1.Hctl_sel1 = 1;
+	Hctl_sel2.Hctl_sel2 = 1;
+	Hctl_data.Hctl_data = Temp_enc[2];
+
+	Hctl_sel1.Hctl_sel1 = 0;
+	Hctl_sel2.Hctl_sel2 = 0;
+	Hctl_data.Hctl_data = Temp_enc[1];
+
+	Hctl_sel1.Hctl_sel1 = 1;
+	Hctl_sel2.Hctl_sel2 = 0;
+	Hctl_data.Hctl_data = Temp_enc[0];
+	Hctl_oe.Hctl_oe = 1;
 }
 void Calc_trapez(byte M)
 {
 	//needs to be implemented
+	if (Vel_pos[M] == 0) Vel_pos[M] = Vel_last[M];
+	Rad[M] =(float)Deg2rad(Deg[Mtr]);
+	Rad[M] = tan(Rad[M]);
+	Vel_max[M] = Vel_pos[M] * 10;
+	Point_p1[M] = Vel_max[M] / Rad[M];
+	Point_p1[M] = Point_p1[M] * 10;
+
+	Vel_neg[M] = -Vel_pos[M];
+	Vel_last[M] = Vel_pos[M];
+	Hctl_2032(M);
+	Diff_position[M] = Pos_final[M] - Pos_encoder[M];
+	Diff_position[M] = abs(Diff_position[M]);
+	Factor_acc[M] = Point_p1[M]/ Vel_pos[M];
+	Diff_2[M] = Diff_position[M] / 2;
+	if (Point_p1[M] > Diff_2[M]) Point_p1[M] = Diff_2[M] / 2;
+
+
+
+
 }
 void Timer_0(void)
 {
