@@ -114,16 +114,13 @@ void Int_0(void)
 {
 	printf("Int_0\n");
 	Configure_pid(1, 0, 0, 0);
-	printf("1 FCM, 1\n");
-	
-	
+	printf("1 FCM, 1\n");	
 }
 void Int_1(void)
 {
 	printf("Int_1\n");
 	Configure_pid(1, 0, 0, 0);
-	printf("2 FCM, 1\n");
-	
+	printf("2 FCM, 1\n");	
 }
 void Enable_all_interrupts(void)
 {
@@ -157,7 +154,6 @@ void Init_parameter(BYTE mtr)
 	Point_p1[mtr] = 20000; //      'Point 1
 	Motor_setpoint[mtr] = 0; //      'Initialize position = 0
 
-
 	if (Mtr == 1)
 		M1_pwm = 0; //       'pwm x = 0
 	if (Mtr == 2)
@@ -182,10 +178,7 @@ int searchforcommand(char * cmd)
 	}
 	return index;
 }
-void Set_mode(byte)
-{
-	//to be done
-}
+
 void Print_com(byte mt, char * string, long value)
 {
 	char buf[50];

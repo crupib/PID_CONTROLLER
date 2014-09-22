@@ -4,6 +4,104 @@
 #include <string.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+/*
+//***** These are comments from the original code.
+'///////////////////////////////////////////////////////////////////////////////
+'///////////////////////////////////////////////////////////////////////////////
+'
+'
+'PROGRAM FOR THE CONTROL PID OF two Motors WITH hp ENCODER HEDS-5540 100 line resolution
+'date 05-28-2007 'version BASCOM 1.8.11.3
+'the serial port in this version does not interfere with the timer 0-1 '
+'transmission of the position performed at the end of the cycle, PID at beginning of the cycle 'MAIN Loop
+'**************************************************f*********************************************************
+'
+'
+' Input Format Command:
+' Command [par1] [par2] [par3] Cr
+'
+' Out Format Command:
+' [MtrNum] [command], [par1]
+'
+' Input Commands From Windows Terminal [ 115200 , 8 , N , 1 ]
+' Not Case Sentitive
+'.................................................................................................................
+' Rstf                                   RESET CPU WITH WATCHDOG START
+' Made                                   WHO WROTE PROGRAMM
+' Ver                                    VERSION OF PROGRAMM
+' Skp  [MtrNum] [kp Value]               SET PROPORZIONAL PID 0-1000 MAX
+' Ski  [MtrNum] [ki Value]               SET INTEGRAL     PID 0-100  MAX
+' Skd  [MtrNum] [kd Value]               SET DERIVATIVE   PID 0-1000 MAX
+' Vmax [MtrNum] [vmax Value]             SET MAX VELOCITY IN PROPORZIONAL VELOCITY PROFILE 0-255
+' Svm  [MtrNum] [svm Value]              SET MAX VELOCITY IN TRAPEZOIDAL MODE 0-255
+' Spid [MtrNum] [kp] [ki] [kd]           SET PID MOTOR KP KI KD
+' Stime[stime Value]                     SET PID EXECUTION TIME 0-10msec/default=3.5 + .5 lt=4msec
+' Smode[MtrNum] [mode]                   SET SINGLE MODE FOR ONE MOTOR
+' Svel [MtrNum] [svel Value]             SET MOTOR WITH INTEGRAL VELOCITY PROFILE AND MOVE 0-255
+' Velo [vel 1] [vel 2]                   SET TWO INDEPENDENT SPEED FOR MOTORS 0-255 & 0-255
+' Spwm [MtrNum] [spwm Value]             SET MAX PWM OUT FOR TORQUE LIMIT 0-255
+' Sacc [MtrNum] [acc Value]              SET ACCELERATION DEGREE 1-89 DEGREES
+' Sang [MtrNum] [angular Factor]         SET ANGULAR FACTOR FOR VELOCITY PROFILE 1-100
+' Go   [MtrNum] [position Value]         GO TO POSITION IN POSITION MODE CONTROL +- 23 BITS
+' Pos  [MtrNum] [position Value] [speed] SET POSITION IN TRAPEZOIDAL PROFILE 0-255
+' Move [position 1] [position 2]         MOVE BOTH MOTORS TO POS 1 & POS 2  +-23 BITS TRAPEZOIDAL MODE
+' Velp [position 1] [position 2]         MOVE CONTINUOS POSITION WITH VARIBLE PROPORZIONAL VELOCITY
+' Start is Start_move                    START MOVE IF START_MOVE = FALSE
+' Stop is Mode_idle                      STOP MOVE AND POWER DOWN MOTORS
+' Gmax [MtrNum]                          GET MAX VELOCITY IN VELOCITY PROFILE MODE
+' Gvm [MtrNum]                           GET MAX VELOCITY IN TRAPEZOIDAL MODE
+' Gve [MtrNum]                           GET ABSOLUTE SPEED FROM ENCODER
+' Enc [MtrNum]                           READ ABSOLUTE ENCODER POSITION
+' Gpid [MtrNum]                          GET PID MOTOR VALUES
+' Gtime                                  GET PID EXECUTION TIME
+' Szp [MtrNum]                           SET ZERO POSITION
+' Idle [MtrNum]                          POWER OFF MOTOR
+' Gsm [MtrNum]                           GET Motor STATE 0=STOP 1=MOVE
+' Mode [mode]                            SET MODE PROFILE FOR 2 Motor 0,1,2,3,4
+' Gmode                                  GET PROFILE MODE SETTING
+' Gpwm [MtrNum]                          GET MAX PWM OUT
+' Rpwm [MtrNum]                          READ REAL PWM OUT TO CONTROL MAX CURRENT
+' Gacc [MtrNum]                          GET ACCELERATION PROFILE IN DEGREE 1-89
+' Gang [MtrNum]                          GET ANGULAR FACTOR
+' Rst [MtrNum]                           RESET ENCODER
+'.............................................................................................................
+
+//**** Was commented out in basic code
+'$prog &HFF , &H6F , &HD7 , &H00       'FUSE BITS
+'$regfile = "m128def.dat"
+'$crystal = 20000000 '18432000 'over clocked CPU
+'$baud = 115200
+'$hwstack = 64
+'$swstack = 64
+'$framesize = 64
+
+
+'-------------------------------------------------------------------------------
+*/
+/*------------------ - ALIAS---------------------------------------------------- -
+M1_pwm Alias Pwm1a : M1_pwm = 0       'pwm out Motor x
+M2_pwm Alias Pwm1b : M2_pwm = 0       'pwm out Motor y
+Ddrd.2 = 0 : Portd.2 = 1       'pullup x int 0
+Ddrd.3 = 0 : Portd.3 = 1       'pullup x int 1
+Limit_1 Alias Pinb.0 : Ddrb.0 = 0       'limit 1 - Interrupt 1
+Limit_2 Alias Pinb.1 : Ddrb.1 = 0       'limit 2 - Interupt 2
+Aux_0 Alias Pinb.2 : Ddrb.2 = 0 : Portb.2 = 1       '*pullup aux 0 *CHANGE-to (X)&(Y)*
+Aux_1 Alias Pinb.3 : Ddrb.3 = 0 : Portb.3 = 1       '*pullup aux 1 *encoder overflow *
+Stop1_bit Alias Portb.4 : Ddrb.4 = 1       '*status Motor 1 *CHANGE-to encoder(X)&(Y)*
+Stop2_bit Alias Portc.6 : Ddrc.6 = 1       '*status Motor 2 *direction.*
+M1dir_bit Alias Portd.6 : Ddrd.6 = 1       'direction Motor x
+M2dir_bit Alias Portd.7 : Ddrd.7 = 1       'direction Motor y
+Motor_led Alias Portc.7 : Ddrc.7 = 1       'led test
+Test1_led Alias Portf.7 : Ddrf.7 = 1       'KJL Added
+Hctl_xy Alias Portc.0 : Ddrc.0 = 1       'selection xy hctl2032
+Hctl_sel1 Alias Portc.1 : Ddrc.1 = 1       'selection byte bit 0
+Hctl_sel2 Alias Portc.2 : Ddrc.2 = 1       'selection byte bit 1
+Hctl_oe Alias Portc.3 : Ddrc.3 = 1       'selecion oe hctl data
+Hctl_rst_1 Alias Portc.4 : Ddrc.4 = 1       'reset encoder x
+Hctl_rst_2 Alias Portc.5 : Ddrc.5 = 1       'reset encoder y
+Hctl_data Alias Pina : Ddra = &H00       'porta input data encoder
+'-------------------------------------------------------------------------------
+*/
 //-------------------------------------------------------------------------------------
 //Registers to be filled in per board
 #define PORTA  0x00  
@@ -23,23 +121,58 @@
 #define USR    0x0d
 #define Deg2rad(angle) ((angle) / 180.0 * M_PI)
 byte ports[40] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,3 };
-static const char regfile[] = "m128def.dat"; //      ' specify the used micro
 
+/*
+$regfile = "m128def.dat"       ' specify the used micro
+$crystal = 20000000 ' used crystal frequency
+$baud = 19200       ' use baud rate
+$hwstack = 64       ' default use 32 for the hardware stack
+$swstack = 64       '10       ' default use 10 for the SW stack
+$framesize = 64     '40     ' default use 40 for the frame space
+*/
+static const char regfile[] = "m128def.dat"; //      ' specify the used micro
 int  crystal = 20000000; //' used crystal frequency - Obsolete
 int  baud = 19200;       //' use baud rate
 int  hwstack = 64;       //' default use 32 for the hardware stack
 int  swstack = 64;       //'10       ' default use 10 for the SW stack
 int  framesize = 64;     //'40     ' default use 40 for the frame space
-
+/*
+Const Si = 1
+Const No = 0
+Const Vb6 = No      'change to 'YES' to use serial port comm with Visual basic 6
+'                    NO = WINDOWS terminal
+*/
 #define Si = 1
 #define No = 0
 #define Vb6 = "No"
+/*
+'---------------------------- CONSTANTS -----------------------------------------
+Const Mode_pos = 0
+Const Mode_vel = 1
+Const Mode_trp = 2
+Const Mode_velp = 3
+Const Mode_idle = 4
+Const True = 1
+Const False = 0
+*/
 const byte Mode_pos = 0;
 const byte Mode_vel = 1;
 const byte Mode_trp = 2;
 const byte Mode_velp = 3;
 const byte Mode_idle = 4;
-
+/*
+'-------------------------------------------------------------------------------
+'------------------- SUBROUTINE ------------------------------------------------
+'-------------------------------------------------------------------------------
+Declare Sub Hctl_2032(byval Mtrnum As Byte)
+Declare Sub Exe_pid(byval Mtrnum As Byte, Byval Pid_setpoint As Long, Byval Pid_actual As Long)
+Declare Sub Configure_pid(byval M As Byte, Byval Mtrnum_kp As Long, Byval Mtrnum_ki As Long, Byval Mtrnum_kd As Long)
+Declare Sub Init_parameter(byval M As Byte)
+Declare Sub Calc_trapez(byval M As Byte)
+Declare Sub Print_com(byval Mt As Byte, Byval Stringa As String, Byval Value As Long)
+Declare Sub Set_mode(byval Mode_control As Byte)
+Declare Function Max_minl(byval I As Long) As Long       ' keep between -255 to 255
+*/
 void Hctl_2032(byte Mtrnum);
 void Exe_pid(byte * Mtrnum, long * Pid_setpoint, long * Pid_actual);
 void Configure_pid(byte mtr, long Mtrnum_kp, long Mtrnum_ki, long Mtrnum_kd);
@@ -51,7 +184,30 @@ long Max_minl(long I);
 
 void main(void)
 {
-	
+	/*------------------ - ALIAS---------------------------------------------------- -
+	M1_pwm Alias Pwm1a : M1_pwm = 0       'pwm out Motor x
+	M2_pwm Alias Pwm1b : M2_pwm = 0       'pwm out Motor y
+	Ddrd.2 = 0 : Portd.2 = 1       'pullup x int 0
+	Ddrd.3 = 0 : Portd.3 = 1       'pullup x int 1
+	Limit_1 Alias Pinb.0 : Ddrb.0 = 0       'limit 1 - Interrupt 1
+	Limit_2 Alias Pinb.1 : Ddrb.1 = 0       'limit 2 - Interupt 2
+	Aux_0 Alias Pinb.2 : Ddrb.2 = 0 : Portb.2 = 1       '*pullup aux 0 *CHANGE-to (X)&(Y)*
+	Aux_1 Alias Pinb.3 : Ddrb.3 = 0 : Portb.3 = 1       '*pullup aux 1 *encoder overflow *
+	Stop1_bit Alias Portb.4 : Ddrb.4 = 1       '*status Motor 1 *CHANGE-to encoder(X)&(Y)*
+	Stop2_bit Alias Portc.6 : Ddrc.6 = 1       '*status Motor 2 *direction.*
+	M1dir_bit Alias Portd.6 : Ddrd.6 = 1       'direction Motor x
+	M2dir_bit Alias Portd.7 : Ddrd.7 = 1       'direction Motor y
+	Motor_led Alias Portc.7 : Ddrc.7 = 1       'led test
+	Test1_led Alias Portf.7 : Ddrf.7 = 1       'KJL Added
+	Hctl_xy Alias Portc.0 : Ddrc.0 = 1       'selection xy hctl2032
+	Hctl_sel1 Alias Portc.1 : Ddrc.1 = 1       'selection byte bit 0
+	Hctl_sel2 Alias Portc.2 : Ddrc.2 = 1       'selection byte bit 1
+	Hctl_oe Alias Portc.3 : Ddrc.3 = 1       'selecion oe hctl data
+	Hctl_rst_1 Alias Portc.4 : Ddrc.4 = 1       'reset encoder x
+	Hctl_rst_2 Alias Portc.5 : Ddrc.5 = 1       'reset encoder y
+	Hctl_data Alias Pina : Ddra = &H00       'porta input data encoder
+	'-------------------------------------------------------------------------------
+	*/
 	byte  F = ports[PORTF];
 	byte  D4 = ports[DDRC];
 	byte C = ports[PORTC];
@@ -72,6 +228,29 @@ void main(void)
 	M2_pwm = 0;
 	
 	void(*foo)(void);
+
+	/*'------------------- CONFIGURATION --------------------------------------------
+	'-------------------------------------------------------------------------------
+	'confiqure the timer1 for pwm set to 8 bit,
+	'set freq = 39.0625 Khz with xtal=20mhz and prescale = 1
+	'we have (20000000/256 = 78.125 Khz) (78.125 K / presc = 78.125 Khz) (78.125/2 pwm = 39.0625 Khz)
+	'-------------------------------------------------------------------------------
+	Config Watchdog = 16
+	Stop Watchdog
+	Config Int0 = Falling
+	Config Int1 = Falling
+	Config Timer1 = Pwm, Pwm = 8, Compare A Pwm = Clear Down, Compare B Pwm = Clear Down, Prescale = 1       '39.0622Khz pwm
+	Config Timer0 = Timer, Prescale = 64       '20000000 clk / 64 presc = 312.5 Khz Timer Clock
+	On Timer0 Timer_0   ' Update PID    '312.5 Khz / 256 (8bit counter overflow) = 1.2207 Khz interrupt
+	On Int0 Int_0       '  Int for limit switch 1 @ Port D.2
+	On Int1 Int_1       '  Int for limit switch 2 @ Port D.3
+	On Urxc Rs232       '  @ Port
+	Enable Timer0       ' Serial Port Handler
+	Enable Urxc         '  enable serial port interrupt
+	Enable Int0         '  enable interrupt for Motor 1 limit switch @ Port D.2
+	Enable Int1         '  enable interrupt for Motor 2 limit switch @ Port D.3
+	Enable Interrupts   ' enable all interrupts
+	*/
 	Config_Watchdog(16);
 	Watchdog(STOP);
 	Config_intx(FALLING,0);
@@ -444,8 +623,8 @@ void Calc_trapez(byte M)
 	if (Vel_pos[M] == 0) Vel_pos[M] = Vel_last[M];
 	Rad[M] =(float)Deg2rad(Deg[Mtr]);
 	Rad[M] = tan(Rad[M]);
-	Vel_max[M] = Vel_pos[M] * 10;
-	Point_p1[M] = Vel_max[M] / Rad[M];
+	Vel_max[M] = (float) Vel_pos[M] * 10;
+	Point_p1[M] = (long) (Vel_max[M] / Rad[M]);
 	Point_p1[M] = Point_p1[M] * 10;
 
 	Vel_neg[M] = -Vel_pos[M];
@@ -456,10 +635,19 @@ void Calc_trapez(byte M)
 	Factor_acc[M] = Point_p1[M]/ Vel_pos[M];
 	Diff_2[M] = Diff_position[M] / 2;
 	if (Point_p1[M] > Diff_2[M]) Point_p1[M] = Diff_2[M] / 2;
-
-
-
-
+	if (Pos_final[M] >= Pos_encoder[M])
+	{
+		Dir_diff[M] = True;
+		Trapez_1[M] = Pos_encoder[M] + Point_p1[M];
+		Trapez_2[M] = Pos_final[M] - Point_p1[M];
+	}
+	else
+	{
+		Dir_diff[M] = False;
+		Trapez_1[M] = Pos_encoder[M] - Point_p1[M];
+		Trapez_2[M] = Pos_final[M] + Point_p1[M];
+	}
+	printf("MTR %i POS %i", M, Pos_final[M]);
 }
 void Timer_0(void)
 {
@@ -566,8 +754,11 @@ void Timer_0(void)
 }
 long Max_minl(long I)
 {
-	//to be implemented
-	return (long)-1;
+	if (I > 255)
+		I = 255;
+	else if (I < 255)
+		I = -255;
+	return (long)I;
 }
 void Exe_pid(byte * Mtrnum, long *Pid_setpoint, long * Pid_actual)
 {
@@ -603,4 +794,47 @@ void Exe_pid(byte * Mtrnum, long *Pid_setpoint, long * Pid_actual)
 		M2_dir_bit.M2_dir_bit = Dir_temp;
 		M2_pwm = Pwm_temp;
 	}
+}
+void Set_mode(byte mode_control)
+{
+	switch (mode_control)
+	{
+	case Mode_pos:
+		Flag_velocity.Flag_velocity = False;
+		Configure_pid(1, 200, 0, 200);
+		Configure_pid(2, 200, 0, 200);
+		Pos_final[1] = Pos_encoder[1];
+		Pos_final[2] = Pos_encoder[2];
+		break;
+	case Mode_vel:
+		Flag_velocity.Flag_velocity = False;
+		Configure_pid(1, 700, 100, 700);
+		Configure_pid(2, 700, 100, 700);
+		Motor_setpoint[1] = 0;
+		Motor_setpoint[2] = 0;
+		break;
+	case Mode_trp:
+		Flag_velocity.Flag_velocity = False;
+		Configure_pid(1, 500, 100, 500);
+		Configure_pid(2, 500, 100, 500);
+		Pos_final[1] = Pos_encoder[1];
+		Pos_final[2] = Pos_encoder[2];
+		break;
+	case Mode_velp:
+		Flag_velocity.Flag_velocity = True;
+		Configure_pid(1, 400, 100, 400);
+		Configure_pid(2, 400, 100, 400);
+		Pos_final[1] = Pos_encoder[1];
+		Pos_final[2] = Pos_encoder[2];
+		break;
+	case Mode_idle:
+		Flag_velocity.Flag_velocity = False;
+		Configure_pid(1, 0, 0, 0);
+		Configure_pid(2, 0, 0, 0);
+		break;
+	default:
+		break;
+	}
+	Mode_ctrl = mode_control;
+
 }
