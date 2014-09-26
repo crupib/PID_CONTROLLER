@@ -109,7 +109,17 @@ void Timer_01(void)
 {
 	printf("Timer_01\n");
 }
-
+/*
+Int_0:              'Limit Switch Motor 1
+	Call Configure_pid(1, 0, 0, 0)
+	Print "(1 FCM, 1)"
+	Return
+	'-------------------------------------------------------------------------------
+Int_1 : 'Limit Switch Motor 2
+		Call Configure_pid(2, 0, 0, 0)
+		Print "(2 FCM, 1)"
+		Return
+*/
 void Int_0(void)
 {
 	printf("Int_0\n");

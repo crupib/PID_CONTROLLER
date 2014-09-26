@@ -276,17 +276,51 @@ void main(void)
 	(*foo)();
 	foo = &Int_1;
 	(*foo)();
+	/*
+	Call Init_parameter(1)
+	Call Init_parameter(2)
+	Call Configure_pid(1, 500, 100, 500)       ''configure Motor 1 - pid initialize
+	Call Configure_pid(2, 500, 100, 500)       'configure Motor 2 - pid initialize
+	'...................P....I......D
+	Print "(0 Motor Control, 0)"
+	*/
 	Init_parameter(1);
 	Init_parameter(2);
 	Configure_pid(1, 500, 100, 500);
 	Configure_pid(2, 500, 100, 500);
 	printf("0 Motor Control, 0\n");
+	//Test code
+	//Tx_enable.Tx_enable = 1;//Test code
 	Rs232();
+	
+	/*
+	'-------------------------------------------------------------------------------
+	'---------------------- MAIN PROGRAM -------------------------------------------
+	'-------------------------------------------------------------------------------
+	Main:
+		Test1_led = True
+		Motor_led = True
+
+		Do
+
+		Test1_led = True
+
+		If Tx_enable = 1 Then       'allow transmission
+		Tx_enable = 0
+		Print Str_tx_1       'transmit the string
+		End If
+
+		Test1_led = False
+
+
+		'..... here we monitor the 2 Motors
+		Loop
+		'-------------------------------------------------------------------------------
+		End
+	*/
+	
 	Test1_led.Test1_led = True;
 	Motor_led.Motor_led = True;
-
-	//Tx_enable.Tx_enable = 1;//Test code
-
 
 	while (true)
 	{

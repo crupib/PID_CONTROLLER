@@ -12,6 +12,69 @@ char ucommand_old[30];
 //Const True = 1
 #define False 0
 //#define Mode_trp 2
+/*
+'---------------------- VARIABLES ----------------------------------------------
+Dim Pid_kp(2) As Long, Pid_ki(2) As Long, Pid_kd(2) As Long
+Dim Pid_scale(2) As Long
+Dim Pid_prev_error(2) As Long
+Dim Pid_integral_error(2) As Long
+Dim Pid_error(2) As Long
+Dim Ptemp(2) As Long
+Dim Motor_setpoint(2) As Long
+Dim Pid_out(2) As Long       'value to assign pwm
+Dim Timer_pid As Byte       'sample timer pid
+Dim Pos_encoder(2) As Long       'encoder position
+Dim Old_encoder(2) As Long       'previous encoder position
+Dim New_speed(2) As Long       'velocity calculated in  pid
+Dim Act_speed(2) As Long       'velocity actual
+Dim Acc_speed(2) As Long       'velocity acceleration
+Dim Pos_final(2) As Long       'position trapezoidale final
+Dim Temp_enc As Word       'Long KJL      'temp encoder position
+Dim Ucommand As String * 30
+Dim Ucommand_old As String * 30
+Dim Char(20) As Byte
+Dim Idt As Byte : Idt = 1
+Dim N_cmd As Byte
+Dim Cmd_ar(5) As String * 10
+Dim Mode_ctrl As Byte       'mode control
+Dim Mtrnum_kp As Long
+Dim Mtrnum_ki As Long
+Dim Mtrnum_kd As Long
+Dim Vel_pos(2) As Long
+Dim Vel_neg(2) As Long
+Dim Vel_last(2) As Long
+Dim Rpwm(2) As Byte
+Dim Factor_acc(2) As Long
+Dim Point_p1(2) As Long
+Dim Dir_diff(2) As Byte
+Dim Diff_position(2) As Long
+Dim Trapez_1(2) As Long
+Dim Trapez_2(2) As Long
+Dim New_encoder(2) As Long
+Dim Deg(2) As Single
+Dim Rad(2) As Single
+Dim Vel_max(2) As Single
+Dim Diff_2(2) As Long
+Dim Max_pwm(2) As Byte
+Dim Pwm_temp As Byte
+Dim Dir_temp As Byte
+Dim Mtr_num As Byte
+Dim Mtr As Byte
+Dim Start_move As Bit
+Dim Tx_enable As Bit       'if Flag=1 alert Main do-loop to print Str-tx_1
+Dim Str_tx_1 As String * 20       'print in Main do-loop if Tx-enable = 1
+Dim Flag_velocity As Bit
+Dim Sum1 As Long
+Dim Vmax_pos(2) As Long
+Dim Vmax_neg(2) As Long
+Dim Factor_ang(2) As Long       ' angular factor 0-99
+Dim Difference(2) As Long       ' difference
+Dim Acc_speed_p(2) As Long       'acceleration positive x control velocity
+Dim Acc_speed_n(2) As Long       'acceleration negative x control velocity
+Dim Pid_time As Byte       '     'time max pid overflow
+Dim Mstop_ctr(2) As Byte       '   'number of Motionless Motor reading time
+Dim Temp_bit As Bit
+*/
 long Pid_kp[3];
 long Pid_ki[3];
 long Pid_kd[3];
@@ -78,7 +141,37 @@ short Pwm1b;
 short M1_pwm;
 short M2_pwm;
 void Rs232(void);
-
+/*
+'------------------- ALIAS -----------------------------------------------------
+M1_pwm Alias Pwm1a : M1_pwm = 0       'pwm out Motor x
+M2_pwm Alias Pwm1b : M2_pwm = 0       'pwm out Motor y
+Ddrd.2 = 0 : Portd.2 = 1       'pullup x int 0
+Ddrd.3 = 0 : Portd.3 = 1       'pullup x int 1
+Limit_1 Alias Pinb.0 : Ddrb.0 = 0       'limit 1 - Interrupt 1
+Limit_2 Alias Pinb.1 : Ddrb.1 = 0       'limit 2 - Interupt 2
+Aux_0 Alias Pinb.2 : Ddrb.2 = 0 : Portb.2 = 1       '*pullup aux 0 *CHANGE-to (X)&(Y)*
+Aux_1 Alias Pinb.3 : Ddrb.3 = 0 : Portb.3 = 1       '*pullup aux 1 *encoder overflow *
+Stop1_bit Alias Portb.4 : Ddrb.4 = 1       '*status Motor 1 *CHANGE-to encoder(X)&(Y)*
+Stop2_bit Alias Portc.6 : Ddrc.6 = 1       '*status Motor 2 *direction.*
+M1dir_bit Alias Portd.6 : Ddrd.6 = 1       'direction Motor x
+M2dir_bit Alias Portd.7 : Ddrd.7 = 1       'direction Motor y
+Motor_led Alias Portc.7 : Ddrc.7 = 1       'led test
+Test1_led Alias Portf.7 : Ddrf.7 = 1       'KJL Added
+Hctl_xy Alias Portc.0 : Ddrc.0 = 1       'selection xy hctl2032
+Hctl_sel1 Alias Portc.1 : Ddrc.1 = 1       'selection byte bit 0
+Hctl_sel2 Alias Portc.2 : Ddrc.2 = 1       'selection byte bit 1
+Hctl_oe Alias Portc.3 : Ddrc.3 = 1       'selecion oe hctl data
+Hctl_rst_1 Alias Portc.4 : Ddrc.4 = 1       'reset encoder x
+Hctl_rst_2 Alias Portc.5 : Ddrc.5 = 1       'reset encoder y
+Hctl_data Alias Pina : Ddra = &H00       'porta input data encoder
+'-------------------------------------------------------------------------------
+Hctl_xy = 0         'selection encoder x
+Hctl_sel1 = 0       'selection first byte msb
+Hctl_sel2 = 1       'selection first byte msb
+Hctl_oe = 1         'no output enable
+Hctl_rst_1 = 1      'no reset
+Hctl_rst_2 = 1      'no reset
+*/
 struct
 {
 	byte Temp_bit : 1;
