@@ -143,6 +143,38 @@ struct misc_bits
 	unsigned Flag_velocity : 1;
 	unsigned Temp_bit : 1;
 };
+/*
+'-------------------------------------------------------------------------------
+'------------------------- initilize Paramaters -------------------------------
+'-------------------------------------------------------------------------------
+Sub Init_parameter(mtr)
+
+Pid_time = 4    'pid time -
+Sum1 = 1000
+
+Vmax_pos(mtr) = 126
+Vmax_neg(mtr) = -vmax_pos(mtr)
+
+Vel_pos(mtr) = 126       'Velocity Initialize
+Vel_last(mtr) = Vel_pos(mtr)       'last velocity value
+Vel_neg(mtr) = -vel_pos(mtr)       'Initialize negative velocity
+
+Flag_velocity = False
+Start_move = True       'start move
+
+Max_pwm(mtr) = 250       'Max pwm value
+Deg(mtr) = 45  'acceleration slope in grad(1)i
+Factor_acc(mtr) = 100
+Point_p1(mtr) = 20000       'Point 1
+Motor_setpoint(mtr) = 0       'Initialize position = 0
+
+If Mtr = 1 Then M1_pwm = 0       'pwm x = 0
+If Mtr = 2 Then M2_pwm = 0       'pwm y = 0
+
+Mode_ctrl = Mode_trp       'trapezoidal control
+
+End Sub
+*/
 void Init_parameter(BYTE mtr)
 {
 	Pid_time = 4;
@@ -188,7 +220,13 @@ int searchforcommand(char * cmd)
 	}
 	return index;
 }
+/*
+Sub Print_com(mt, Stringa, Value)
 
+Str_tx_1 = "(" + Str(mt) + " " + Stringa + ", " + Str(value) + ")"
+
+End Sub
+*/
 void Print_com(byte mt, char * string, long value)
 {
 	char buf[50];
