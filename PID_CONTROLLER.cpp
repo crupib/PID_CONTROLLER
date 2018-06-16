@@ -397,6 +397,8 @@ void Rs232(void)
 	printf("ucommand = %s\n", ucommand);
 	strupr(ucommand);
 	printf("ucommand = %s\n", ucommand);	
+	for (i = 0; i < 5; i++)
+		cmd_array[i] = 0;
 	p = strtok(ucommand, " ");
 	while (p != NULL)
 	{
@@ -404,7 +406,7 @@ void Rs232(void)
 		p = strtok(NULL, " ");
 		count++;
 	}
-
+	
 	for (i = 0; i<count; ++i)
 		printf("%s\n", cmd_array[i]);
 	if (strcmp(ucommand, "")==0)
